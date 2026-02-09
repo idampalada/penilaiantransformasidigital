@@ -1,0 +1,18 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $this->call([
+            RoleSeeder::class,
+            UnitSeeder::class,
+            UserSeeder::class,
+            ZiIndikatorSeeder::class, // MASTER ZI UNOR (1 ROW)
+        ]);
+    }
+}
