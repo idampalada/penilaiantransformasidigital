@@ -45,20 +45,32 @@
 @foreach ($indikators as $item)
 
 @php
-    $metodes    = str_contains($item->metode_pengukuran, '||')
-                    ? explode('||', $item->metode_pengukuran)
-                    : [$item->metode_pengukuran];
+    $hasSplit = str_contains($item->metode_pengukuran, '||');
 
-    $penilaians = str_contains($item->penilaian, '||')
-                    ? explode('||', $item->penilaian)
-                    : [$item->penilaian];
+    $komponens = $hasSplit
+        ? explode('||', $item->komponen)
+        : [$item->komponen];
 
-    $buktis     = str_contains($item->bukti_persyaratan, '||')
-                    ? explode('||', $item->bukti_persyaratan)
-                    : [$item->bukti_persyaratan];
+    $metodes = $hasSplit
+        ? explode('||', $item->metode_pengukuran)
+        : [$item->metode_pengukuran];
 
-    $rows = max(count($metodes), count($penilaians), count($buktis));
+    $penilaians = $hasSplit
+        ? explode('||', $item->penilaian)
+        : [$item->penilaian];
+
+    $buktis = $hasSplit
+        ? explode('||', $item->bukti_persyaratan)
+        : [$item->bukti_persyaratan];
+
+    $rows = max(
+        count($komponens),
+        count($metodes),
+        count($penilaians),
+        count($buktis)
+    );
 @endphp
+
 
 @for ($i = 0; $i < $rows; $i++)
 <tr>
@@ -66,21 +78,29 @@
         <td rowspan="{{ $rows }}" class="text-center">{{ $item->nomor }}</td>
         <td rowspan="{{ $rows }}">{{ $item->kriteria }}</td>
         <td rowspan="{{ $rows }}">{{ $item->indikator }}</td>
-        <td rowspan="{{ $rows }}">{{ $item->komponen }}</td>
     @endif
 
+    {{-- KOMPONEN (SUDAH IKUT SPLIT) --}}
+    <td>
+        {{ trim($komponens[$i] ?? $item->komponen) }}
+    </td>
+
+    {{-- METODE --}}
     <td>
         {!! nl2br(e(str_replace(';;', "\n", $metodes[$i] ?? ''))) !!}
     </td>
 
+    {{-- PENILAIAN --}}
     <td>
         {!! nl2br(e(str_replace(';;', "\n", $penilaians[$i] ?? ''))) !!}
     </td>
 
+    {{-- BUKTI --}}
     <td>
         {!! nl2br(e(str_replace(';;', "\n", $buktis[$i] ?? ''))) !!}
     </td>
 
+    {{-- FILE --}}
     <td>
         <input type="file" class="form-control zi-file-input">
     </td>
@@ -95,6 +115,7 @@
     @endif
 </tr>
 @endfor
+
 
 @endforeach
 </tbody>
