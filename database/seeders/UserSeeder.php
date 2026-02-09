@@ -10,31 +10,59 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminUnorRole = DB::table('roles')->where('name', 'admin_unor')->first();
-        $penilaiRole   = DB::table('roles')->where('name', 'penilai_eksternal')->first();
+        $roles = DB::table('roles')->pluck('id', 'name');
 
-        $unor = DB::table('units')->whereNull('parent_id')->first();
+        $superadminRoleId = $roles['superadmin'] ?? null;
+        $adminUnorRoleId  = $roles['admin_unor'] ?? null;
+        $penilaiRoleId    = $roles['penilai_eksternal'] ?? null;
 
-        // Admin UNOR
-        DB::table('users')->insert([
-            'name' => 'Admin UNOR',
-            'email' => 'admin@unor.go.id',
-            'password' => Hash::make('password'),
-            'role_id' => $adminUnorRole->id,
-            'unit_id' => $unor->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $pusdatin = DB::table('units')
+            ->where('nama', 'Pusat Data dan Teknologi Informasi')
+            ->first();
 
-        // Penilai Eksternal
-        DB::table('users')->insert([
-            'name' => 'Penilai Eksternal',
-            'email' => 'penilai@eksternal.go.id',
-            'password' => Hash::make('password'),
-            'role_id' => $penilaiRole->id,
-            'unit_id' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // SUPERADMIN
+        if ($superadminRoleId) {
+            DB::table('users')->updateOrInsert(
+                ['email' => 'admin@example.com'],
+                [
+                    'name' => 'Super Admin',
+                    'password' => Hash::make('password'),
+                    'role_id' => $superadminRoleId,
+                    'unit_id' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // ADMIN UNOR
+        if ($adminUnorRoleId && $pusdatin) {
+            DB::table('users')->updateOrInsert(
+                ['email' => 'admin@pusdatin.go.id'],
+                [
+                    'name' => 'Admin UNOR Pusdatin',
+                    'password' => Hash::make('password'),
+                    'role_id' => $adminUnorRoleId,
+                    'unit_id' => $pusdatin->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // PENILAI EKSTERNAL
+        if ($penilaiRoleId) {
+            DB::table('users')->updateOrInsert(
+                ['email' => 'penilai@eksternal.go.id'],
+                [
+                    'name' => 'Penilai Eksternal',
+                    'password' => Hash::make('password'),
+                    'role_id' => $penilaiRoleId,
+                    'unit_id' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
     }
 }

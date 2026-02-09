@@ -9,17 +9,20 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('roles')->insert([
-            [
-                'name' => 'admin_unor',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'penilai_eksternal',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        $roles = [
+            'superadmin',
+            'admin_unor',
+            'penilai_eksternal',
+        ];
+
+        foreach ($roles as $role) {
+            DB::table('roles')->updateOrInsert(
+                ['name' => $role],
+                [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
     }
 }
