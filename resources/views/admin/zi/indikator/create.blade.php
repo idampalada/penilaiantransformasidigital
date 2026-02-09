@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
         <h4><strong>Tambah Indikator ZI</strong></h4>
         <p class="text-muted">
@@ -26,34 +26,39 @@
             {{-- KRITERIA --}}
             <div class="form-group mb-3">
                 <label>Kriteria</label>
-                <input type="text"
-                       name="kriteria"
-                       class="form-control"
-                       required>
+                <textarea name="kriteria"
+                          rows="2"
+                          class="form-control"
+                          required></textarea>
             </div>
 
             {{-- INDIKATOR --}}
             <div class="form-group mb-3">
                 <label>Indikator</label>
-                <input type="text"
-                       name="indikator"
-                       class="form-control"
-                       required>
+                <textarea name="indikator"
+                          rows="2"
+                          class="form-control"
+                          required></textarea>
             </div>
 
             {{-- KOMPONEN --}}
-            <div class="form-group mb-3">
+            <div class="form-group mb-4">
                 <label>Komponen</label>
-                <input type="text"
-                       name="komponen"
-                       class="form-control"
-                       required>
+                <textarea name="komponen"
+                          rows="3"
+                          class="form-control"
+                          required></textarea>
+
+                <small class="text-muted d-block mt-1">
+                    • Gunakan <code>||</code> jika komponen berbeda per metode<br>
+                    • Jika sama untuk semua metode, cukup isi satu baris saja
+                </small>
             </div>
 
             <hr>
 
             {{-- METODE --}}
-            <div class="form-group mb-3">
+            <div class="form-group mb-4">
                 <label>Metode Pengukuran</label>
                 <textarea name="metode_pengukuran"
                           rows="6"
@@ -68,7 +73,7 @@
             </div>
 
             {{-- PENILAIAN --}}
-            <div class="form-group mb-3">
+            <div class="form-group mb-4">
                 <label>Penilaian</label>
                 <textarea name="penilaian"
                           rows="6"
@@ -78,7 +83,7 @@
                 <small class="text-muted d-block mt-1">
                     <strong>PENTING:</strong><br>
                     • Jumlah <code>||</code> HARUS SAMA dengan Metode Pengukuran<br>
-                    • Urutan split akan menentukan nilai & file bukti
+                    • Urutan split menentukan baris penilaian & file bukti
                 </small>
             </div>
 
