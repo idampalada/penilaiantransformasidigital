@@ -49,5 +49,18 @@ public function index()
     return redirect('/admin/indikator')
         ->with('success', 'Indikator berhasil ditambahkan');
 }
+public function edit(ZiIndikator $indikator)
+{
+    return view('admin.zi.indikator.edit', compact('indikator'));
+}
+public function update(Request $request, ZiIndikator $indikator)
+{
+    $indikator->update($request->all());
+
+    return redirect()
+        ->route('admin.indikator.index')
+        ->with('success', 'Indikator berhasil diperbarui');
+}
+
 
 }

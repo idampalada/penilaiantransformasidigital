@@ -1,26 +1,30 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZiIndikatorController;
-use App\Http\Controllers\Admin\ZiAdminIndikatorController;
 use App\Http\Controllers\ZiBuktiController;
+use App\Http\Controllers\Admin\ZiAdminIndikatorController;
 
+/*
+|--------------------------------------------------------------------------
+| PUBLIC / UNOR
+|--------------------------------------------------------------------------
+*/
 
-Route::prefix('admin')
-    ->middleware(['auth']) // nanti tambah role:superadmin
-    ->group(function () {
+// Landing ZI (UNOR)
+Route::get('/', [ZiIndikatorController::class, 'index'])
+    ->name('zi.index');
 
-    Route::get('/indikator', [ZiIndikatorController::class, 'index']);
-    Route::get('/indikator/create', [ZiIndikatorController::class, 'create']);
-    Route::post('/indikator', [ZiIndikatorController::class, 'store']);
+// Upload bukti oleh UNOR
+Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
+    ->name('zi.bukti.upload');
 
-});
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -32,23 +36,39 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::get('/', function () {
-    return view('zi.index');
-});
-
-Route::get('/', [ZiIndikatorController::class, 'index']);
-
-Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
-    ->name('zi.bukti.upload');
+/*
+|--------------------------------------------------------------------------
+| ADMIN - MASTER INDIKATOR ZI
+|--------------------------------------------------------------------------
+*/
 
 Route::prefix('admin')
-    ->middleware(['auth']) // nanti tambah role:superadmin
+    ->middleware(['auth']) // nanti bisa ditambah role:superadmin
+    ->name('admin.')
     ->group(function () {
 
-        Route::get('/indikator', [ZiAdminIndikatorController::class, 'index']);
-        Route::get('/indikator/create', [ZiAdminIndikatorController::class, 'create']);
-        Route::post('/indikator', [ZiAdminIndikatorController::class, 'store']);
+        // LIST
+        Route::get('/indikator', [ZiAdminIndikatorController::class, 'index'])
+            ->name('indikator.index');
 
+        // CREATE
+        Route::get('/indikator/create', [ZiAdminIndikatorController::class, 'create'])
+            ->name('indikator.create');
+
+        Route::post('/indikator', [ZiAdminIndikatorController::class, 'store'])
+            ->name('indikator.store');
+
+        // EDIT
+        Route::get('/indikator/{indikator}/edit', [ZiAdminIndikatorController::class, 'edit'])
+            ->name('indikator.edit');
+
+        // UPDATE
+        Route::put('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'update'])
+            ->name('indikator.update');
+
+        // (opsional) DELETE
+        Route::delete('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'destroy'])
+            ->name('indikator.destroy');
     });

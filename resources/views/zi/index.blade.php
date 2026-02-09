@@ -13,26 +13,13 @@
 <div class="table-responsive">
 <table class="table table-bordered zi-table">
 
-<colgroup>
-    <col style="width:50px">
-    <col style="width:140px">
-    <col style="width:180px">
-    <col style="width:180px">
-    <col style="width:260px">
-    <col style="width:260px">
-    <col style="width:260px">
-    <col style="width:160px">
-    <col style="width:120px">
-    <col style="width:120px">
-</colgroup>
-
 <thead>
 <tr>
     <th>No</th>
     <th>Kriteria</th>
     <th>Indikator</th>
     <th>Komponen</th>
-    <th>Metode</th>
+    <th>Metode Pengukuran</th>
     <th>Penilaian</th>
     <th>Bukti / Persyaratan</th>
     <th>File Bukti</th>
@@ -43,88 +30,78 @@
 
 <tbody>
 
-@php
-    $currentKategori = null;
-@endphp
+@php $currentKategori = null; @endphp
 
 @foreach ($indikators as $item)
 
     {{-- ================= HEADER KATEGORI ================= --}}
     @if ($item->kategori !== $currentKategori)
         <tr class="zi-group-header">
-            <td colspan="10">{{ strtoupper($item->kategori) }}</td>
+            <td colspan="10"><strong>{{ strtoupper($item->kategori) }}</strong></td>
         </tr>
         @php $currentKategori = $item->kategori; @endphp
     @endif
 
-    @php
-        $hasSplit = str_contains($item->metode_pengukuran, '||');
+    @php $firstItemRow = true; @endphp
 
-        $komponens = $hasSplit
-            ? explode('||', $item->komponen)
-            : [$item->komponen];
+    @foreach ($item->groups as $group)
 
-        $metodes = $hasSplit
-            ? explode('||', $item->metode_pengukuran)
-            : [$item->metode_pengukuran];
+        @foreach ($group['rows'] as $idx => $row)
 
-        $penilaians = $hasSplit
-            ? explode('||', $item->penilaian)
-            : [$item->penilaian];
-
-        $buktis = $hasSplit
-            ? explode('||', $item->bukti_persyaratan)
-            : [$item->bukti_persyaratan];
-
-        $rows = max(
-            count($komponens),
-            count($metodes),
-            count($penilaians),
-            count($buktis)
-        );
-    @endphp
-
-    @for ($i = 0; $i < $rows; $i++)
-        <tr class="zi-group-content">
-            @if ($i === 0)
-                <td rowspan="{{ $rows }}" class="text-center">{{ $item->nomor }}</td>
-                <td rowspan="{{ $rows }}">{{ $item->kriteria }}</td>
-                <td rowspan="{{ $rows }}">{{ $item->indikator }}</td>
+        <tr>
+            {{-- NO / KRITERIA / INDIKATOR --}}
+            @if ($firstItemRow)
+                <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
+                    {{ $item->nomor }}
+                </td>
+                <td rowspan="{{ $item->total_rows }}" class="align-middle">
+                    {{ $item->kriteria }}
+                </td>
+                <td rowspan="{{ $item->total_rows }}" class="align-middle">
+                    {{ $item->indikator }}
+                </td>
             @endif
 
             {{-- KOMPONEN --}}
-            <td>{{ trim($komponens[$i] ?? '') }}</td>
+            @if ($idx === 0)
+                <td rowspan="{{ $group['rowspan'] }}" class="align-middle">
+                    {{ $group['komponen'] }}
+                </td>
+            @endif
 
             {{-- METODE --}}
-            <td>{!! nl2br(e(str_replace(';;', "\n", $metodes[$i] ?? ''))) !!}</td>
+            <td>{!! nl2br(e($row['metode'])) !!}</td>
 
             {{-- PENILAIAN --}}
-            <td>{!! nl2br(e(str_replace(';;', "\n", $penilaians[$i] ?? ''))) !!}</td>
+            <td>{!! nl2br(e($row['penilaian'])) !!}</td>
 
             {{-- BUKTI --}}
-            <td>{!! nl2br(e(str_replace(';;', "\n", $buktis[$i] ?? ''))) !!}</td>
+            <td>{!! nl2br(e($row['bukti'])) !!}</td>
 
             {{-- FILE --}}
             <td>
-                <input type="file" class="form-control zi-file-input">
+                <input type="file" class="form-control">
             </td>
 
-            @if ($i === 0)
-                <td rowspan="{{ $rows }}" class="text-center">
-                    <input class="form-control zi-input" disabled>
+            {{-- NILAI --}}
+            @if ($firstItemRow)
+                <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
+                    <input class="form-control" disabled>
                 </td>
-                <td rowspan="{{ $rows }}" class="text-center">
-                    <input class="form-control zi-input" disabled>
+                <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
+                    <input class="form-control" disabled>
                 </td>
             @endif
         </tr>
-    @endfor
+
+        @php $firstItemRow = false; @endphp
+
+        @endforeach
+    @endforeach
 
 @endforeach
 
 </tbody>
-
-
 
 </table>
 </div>

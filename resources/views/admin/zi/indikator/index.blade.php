@@ -39,12 +39,18 @@
         @php $currentKategori = $item->kategori; @endphp
     @endif
 
-    <tr class="zi-group-content">
-        <td class="text-center">{{ $item->nomor }}</td>
-        <td>{{ $item->kriteria }}</td>
-        <td>{{ $item->indikator }}</td>
-        <td>{{ $item->komponen }}</td>
-    </tr>
+<tr class="zi-group-content">
+    <td class="text-center">{{ $item->nomor }}</td>
+    <td>{{ $item->kriteria }}</td>
+    <td>{{ $item->indikator }}</td>
+    <td>{{ $item->komponen }}</td>
+    <td>
+        <a href="{{ route('admin.indikator.edit', $item->id) }}"
+           class="btn btn-sm btn-warning">
+            Edit
+        </a>
+    </td>
+</tr>
 
 @endforeach
 

@@ -95,6 +95,10 @@
     padding: 8px;
 }
 
+.zi-table td,
+.zi-table th {
+    vertical-align: middle !important;
+}
 
     </style>
     
