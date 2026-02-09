@@ -3,113 +3,106 @@
 @section('content')
 
 <div class="row">
-    <div class="col-md-12">
+<div class="col-md-12">
 
-        <h4><strong>LEMBAR KERJA EVALUASI ZONA INTEGRITAS (ZI)</strong></h4>
-        <p><strong>PUSAT DATA DAN TEKNOLOGI INFORMASI</strong></p>
+<h4><strong>LEMBAR KERJA EVALUASI ZONA INTEGRITAS (ZI)</strong></h4>
+<p><strong>PUSAT DATA DAN TEKNOLOGI INFORMASI</strong></p>
 
-        <div class="pull-right" style="margin-top:-40px">
-            <button class="btn btn-excel">Cetak ke Excel</button>
-        </div>
+<hr>
 
-        <hr>
+<div class="table-responsive">
+<table class="table table-bordered zi-table">
 
-        <form action="{{ route('zi.bukti.upload') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+<colgroup>
+    <col style="width:50px">
+    <col style="width:140px">
+    <col style="width:180px">
+    <col style="width:180px">
+    <col style="width:260px">
+    <col style="width:260px">
+    <col style="width:260px">
+    <col style="width:160px">
+    <col style="width:120px">
+    <col style="width:120px">
+</colgroup>
 
-        <div class="table-responsive">
-        <table class="table table-bordered zi-table">
+<thead>
+<tr>
+    <th>No</th>
+    <th>Kriteria</th>
+    <th>Indikator</th>
+    <th>Komponen</th>
+    <th>Metode</th>
+    <th>Penilaian</th>
+    <th>Bukti / Persyaratan</th>
+    <th>File Bukti</th>
+    <th>Nilai Internal</th>
+    <th>Nilai Eksternal</th>
+</tr>
+</thead>
 
-            <thead>
-                <tr>
-                    <th width="40">No</th>
-                    <th>Kriteria</th>
-                    <th>Indikator</th>
-                    <th>Komponen</th>
-                    <th>Metode Pengukuran</th>
-                    <th>Penilaian</th>
-                    <th>Bukti / Persyaratan</th>
-                    <th width="180">File Bukti (PDF)</th>
-                    <th width="90">Nilai Internal</th>
-                    <th width="90">Nilai Eksternal</th>
-                </tr>
-            </thead>
+<tbody>
+@foreach ($indikators as $item)
 
-            <tbody>
-            @forelse ($indikators as $item)
+@php
+    $metodes    = str_contains($item->metode_pengukuran, '||')
+                    ? explode('||', $item->metode_pengukuran)
+                    : [$item->metode_pengukuran];
 
-            @php
-                $hasSplit = str_contains($item->metode_pengukuran, '||');
-                $metodes = $hasSplit ? explode('||', $item->metode_pengukuran) : [$item->metode_pengukuran];
-                $penilaians = $hasSplit ? explode('||', $item->penilaian) : [$item->penilaian];
-            @endphp
+    $penilaians = str_contains($item->penilaian, '||')
+                    ? explode('||', $item->penilaian)
+                    : [$item->penilaian];
 
-            <tr>
-                <td class="text-center">{{ $item->nomor }}</td>
-                <td>{{ $item->kriteria }}</td>
-                <td>{{ $item->indikator }}</td>
-                <td>{{ $item->komponen }}</td>
+    $buktis     = str_contains($item->bukti_persyaratan, '||')
+                    ? explode('||', $item->bukti_persyaratan)
+                    : [$item->bukti_persyaratan];
 
-                {{-- METODE + PENILAIAN --}}
-                @if ($hasSplit)
-                    <td colspan="2" style="padding:0">
-                        <table class="zi-inner-table">
-                            @foreach ($metodes as $i => $metode)
-                            <tr>
-                                <td class="zi-inner-metode">
-                                    {!! nl2br(e(trim($metode))) !!}
-                                </td>
-                                <td class="zi-inner-penilaian">
-                                    @foreach (explode(';;', $penilaians[$i] ?? '') as $row)
-                                        {!! nl2br(e(trim($row))) !!}<br>
-                                    @endforeach
-                                </td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
-                @else
-                    <td>{!! nl2br(e($metodes[0])) !!}</td>
-                    <td>{!! nl2br(e($penilaians[0])) !!}</td>
-                @endif
+    $rows = max(count($metodes), count($penilaians), count($buktis));
+@endphp
 
-                {{-- BUKTI / PERSYARATAN --}}
-                <td>{!! nl2br(e($item->bukti_persyaratan)) !!}</td>
+@for ($i = 0; $i < $rows; $i++)
+<tr>
+    @if ($i === 0)
+        <td rowspan="{{ $rows }}" class="text-center">{{ $item->nomor }}</td>
+        <td rowspan="{{ $rows }}">{{ $item->kriteria }}</td>
+        <td rowspan="{{ $rows }}">{{ $item->indikator }}</td>
+        <td rowspan="{{ $rows }}">{{ $item->komponen }}</td>
+    @endif
 
-                {{-- FILE BUKTI --}}
-                <td>
-                    @foreach ($metodes as $i => $m)
-                        <div style="margin-bottom:6px">
-                            <input type="file"
-                                   name="bukti[{{ $item->id }}][{{ $hasSplit ? $i : 'single' }}]"
-                                   accept="application/pdf"
-                                   class="form-control">
-                        </div>
-                    @endforeach
-                </td>
+    <td>
+        {!! nl2br(e(str_replace(';;', "\n", $metodes[$i] ?? ''))) !!}
+    </td>
 
-                {{-- NILAI --}}
-                <td><input type="text" class="form-control zi-input" disabled></td>
-                <td><input type="text" class="form-control zi-input" disabled></td>
-            </tr>
+    <td>
+        {!! nl2br(e(str_replace(';;', "\n", $penilaians[$i] ?? ''))) !!}
+    </td>
 
-            @empty
-            <tr>
-                <td colspan="10" class="text-center text-muted">
-                    Data indikator belum tersedia
-                </td>
-            </tr>
-            @endforelse
+    <td>
+        {!! nl2br(e(str_replace(';;', "\n", $buktis[$i] ?? ''))) !!}
+    </td>
 
-            </tbody>
+    <td>
+        <input type="file" class="form-control zi-file-input">
+    </td>
 
-        </table>
-        </div>
+    @if ($i === 0)
+        <td rowspan="{{ $rows }}" class="text-center">
+            <input class="form-control zi-input" disabled>
+        </td>
+        <td rowspan="{{ $rows }}" class="text-center">
+            <input class="form-control zi-input" disabled>
+        </td>
+    @endif
+</tr>
+@endfor
 
-        <button class="btn btn-primary">Simpan Bukti</button>
-        </form>
+@endforeach
+</tbody>
 
-    </div>
+</table>
+</div>
+
+</div>
 </div>
 
 @endsection

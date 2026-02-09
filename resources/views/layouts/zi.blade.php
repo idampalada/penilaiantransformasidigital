@@ -5,10 +5,12 @@
     <title>e-Monitoring Reformasi Birokrasi</title>
 
     {{-- BOOTSTRAP 3 --}}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
     {{-- FONT AWESOME --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
         body {
@@ -16,50 +18,73 @@
             font-size: 12px;
         }
 
-        /* HEADER TABLE */
+        /* ==========================
+           TABLE GLOBAL
+        ========================== */
+        .zi-table {
+            background: #fff;
+            width: 100%;
+            table-layout: fixed; /* KUNCI LAYOUT */
+        }
+
+        .zi-table th,
+        .zi-table td {
+            border: 1px solid #ccc !important;
+            vertical-align: top !important;
+            padding: 6px 8px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        /* ==========================
+           TABLE HEADER
+        ========================== */
         .zi-table thead th {
             background: #003366;
             color: #fff;
             text-align: center;
-            vertical-align: middle;
-        }
-
-        /* SECTION */
-        .zi-section {
-            background: #00a2e8;
-            color: #fff;
+            vertical-align: middle !important;
             font-weight: bold;
         }
 
-        .zi-subsection {
-            background: #8ee7ff;
-            font-weight: bold;
+        /* ==========================
+           INNER SPLIT TABLE
+        ========================== */
+        .zi-inner-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
         }
 
-        .zi-table td, .zi-table th {
-            border: 1px solid #ccc !important;
+        .zi-inner-table td {
+            border: 1px solid #bbb;
+            padding: 6px;
             vertical-align: top;
+            line-height: 1.4;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
+        /* HILANGKAN DOUBLE BORDER */
+        .zi-table td[colspan] {
+            padding: 0 !important;
+        }
+
+        /* ==========================
+           INPUT & FILE
+        ========================== */
         .zi-input {
             width: 60px;
+            height: 30px;
             text-align: center;
+            padding: 4px;
+            font-size: 12px;
         }
 
-        .btn-excel {
-            background: #f0ad4e;
-            color: #000;
-            font-weight: bold;
+        .zi-file-input {
+            width: 100%;
+            font-size: 11px;
         }
-
-        .zi-cell-split > div {
-    padding: 6px;
-}
-
-.zi-cell-split > div + div {
-    border-top: 1px solid #999;
-}
-
     </style>
 </head>
 <body>

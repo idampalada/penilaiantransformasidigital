@@ -23,37 +23,22 @@ class ZiAdminIndikatorController extends Controller
     {
         $request->validate([
             'nomor' => 'required|integer',
-            'kriteria' => 'required|string',
-            'indikator' => 'required|string',
-            'komponen' => 'required|string',
-            'metode' => 'required|array|min:1',
-            'penilaian' => 'required|array|min:1',
-            'bukti_persyaratan' => 'required|string',
+            'kriteria' => 'required',
+            'indikator' => 'required',
+            'komponen' => 'required',
+            'metode_pengukuran' => 'required',
+            'penilaian' => 'required',
+            'bukti_persyaratan' => 'required',
         ]);
-
-        // Gabung metode (||)
-        $metodePengukuran = collect($request->metode)
-            ->map(fn ($m) => trim($m))
-            ->implode('||');
-
-        // Gabung penilaian (;; per baris, || per metode)
-        $penilaian = collect($request->penilaian)
-            ->map(function ($rows) {
-                return collect(explode("\n", $rows))
-                    ->map(fn ($r) => trim($r))
-                    ->implode(';;');
-            })
-            ->implode('||');
 
         ZiIndikator::create([
             'nomor' => $request->nomor,
             'kriteria' => $request->kriteria,
             'indikator' => $request->indikator,
             'komponen' => $request->komponen,
-            'metode_pengukuran' => $metodePengukuran,
-            'penilaian' => $penilaian,
+            'metode_pengukuran' => $request->metode_pengukuran,
+            'penilaian' => $request->penilaian,
             'bukti_persyaratan' => $request->bukti_persyaratan,
-            'is_active' => true,
         ]);
 
         return redirect('/admin/indikator')
