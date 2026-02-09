@@ -85,7 +85,19 @@
             width: 100%;
             font-size: 11px;
         }
+        /* ================= GROUP HEADER ================= */
+.zi-group-header td {
+    background: #0099FF; /* biru tua */
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    font-size: 13px;
+    padding: 8px;
+}
+
+
     </style>
+    
 </head>
 <body>
 

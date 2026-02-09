@@ -8,11 +8,23 @@ use App\Models\ZiIndikator;
 
 class ZiAdminIndikatorController extends Controller
 {
-    public function index()
-    {
-        $indikators = ZiIndikator::orderBy('nomor')->get();
-        return view('admin.zi.indikator.index', compact('indikators'));
-    }
+public function index()
+{
+    $indikators = ZiIndikator::orderByRaw("
+        CASE kategori
+            WHEN 'Proses' THEN 1
+            WHEN 'Organisasi' THEN 2
+            WHEN 'Data' THEN 3
+            WHEN 'Teknologi' THEN 4
+            ELSE 5
+        END
+    ")
+    ->orderBy('nomor')
+    ->get();
+
+    return view('admin.zi.indikator.index', compact('indikators'));
+}
+
 
     public function create()
     {
@@ -20,28 +32,22 @@ class ZiAdminIndikatorController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nomor' => 'required|integer',
-            'kriteria' => 'required',
-            'indikator' => 'required',
-            'komponen' => 'required',
-            'metode_pengukuran' => 'required',
-            'penilaian' => 'required',
-            'bukti_persyaratan' => 'required',
-        ]);
+{
+    $validated = $request->validate([
+        'nomor' => 'required|integer',
+        'kategori' => 'required|in:Organisasi,Proses,Data,Teknologi',
+        'kriteria' => 'required',
+        'indikator' => 'required',
+        'komponen' => 'required',
+        'metode_pengukuran' => 'required',
+        'penilaian' => 'required',
+        'bukti_persyaratan' => 'required',
+    ]);
 
-        ZiIndikator::create([
-            'nomor' => $request->nomor,
-            'kriteria' => $request->kriteria,
-            'indikator' => $request->indikator,
-            'komponen' => $request->komponen,
-            'metode_pengukuran' => $request->metode_pengukuran,
-            'penilaian' => $request->penilaian,
-            'bukti_persyaratan' => $request->bukti_persyaratan,
-        ]);
+    ZiIndikator::create($validated);
 
-        return redirect('/admin/indikator')
-            ->with('success', 'Indikator berhasil ditambahkan');
-    }
+    return redirect('/admin/indikator')
+        ->with('success', 'Indikator berhasil ditambahkan');
+}
+
 }

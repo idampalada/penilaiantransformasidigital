@@ -10,6 +10,7 @@ class ZiIndikator extends Model
 
     protected $fillable = [
         'nomor',
+            'kategori',
         'kriteria',
         'indikator',
         'komponen',

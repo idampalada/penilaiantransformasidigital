@@ -14,25 +14,42 @@
     </div>
 @endif
 
-<table class="table table-bordered">
+<table class="table zi-table table-bordered">
     <thead>
         <tr>
-            <th>No</th>
-            <th>Kriteria</th>
+            <th style="width:50px">No</th>
+            <th style="width:220px">Kriteria</th>
             <th>Indikator</th>
             <th>Komponen</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($indikators as $item)
-        <tr>
-            <td>{{ $item->nomor }}</td>
-            <td>{{ $item->kriteria }}</td>
-            <td>{{ $item->indikator }}</td>
-            <td>{{ $item->komponen }}</td>
+
+@php
+    $currentKategori = null;
+@endphp
+
+@foreach ($indikators as $item)
+
+    {{-- HEADER KATEGORI --}}
+    @if ($item->kategori !== $currentKategori)
+        <tr class="zi-group-header">
+            <td colspan="4">{{ strtoupper($item->kategori) }}</td>
         </tr>
-        @endforeach
-    </tbody>
+        @php $currentKategori = $item->kategori; @endphp
+    @endif
+
+    <tr class="zi-group-content">
+        <td class="text-center">{{ $item->nomor }}</td>
+        <td>{{ $item->kriteria }}</td>
+        <td>{{ $item->indikator }}</td>
+        <td>{{ $item->komponen }}</td>
+    </tr>
+
+@endforeach
+
+</tbody>
+
 </table>
 
 @endsection

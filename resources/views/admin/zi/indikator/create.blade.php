@@ -22,6 +22,21 @@
                        class="form-control"
                        required>
             </div>
+{{-- KATEGORI --}}
+<div class="form-group mb-3">
+    <label>Kategori</label>
+    <select name="kategori" class="form-control" required>
+        <option value="">-- Pilih Kategori --</option>
+        <option value="Organisasi">Organisasi</option>
+        <option value="Proses">Proses</option>
+        <option value="Data">Data</option>
+        <option value="Teknologi">Teknologi</option>
+    </select>
+
+    <small class="text-muted">
+        Digunakan untuk pengelompokan indikator (Organisasi / Proses / Data / Teknologi)
+    </small>
+</div>
 
             {{-- KRITERIA --}}
             <div class="form-group mb-3">

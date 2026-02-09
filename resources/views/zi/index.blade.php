@@ -42,83 +42,89 @@
 </thead>
 
 <tbody>
-@foreach ($indikators as $item)
 
 @php
-    $hasSplit = str_contains($item->metode_pengukuran, '||');
-
-    $komponens = $hasSplit
-        ? explode('||', $item->komponen)
-        : [$item->komponen];
-
-    $metodes = $hasSplit
-        ? explode('||', $item->metode_pengukuran)
-        : [$item->metode_pengukuran];
-
-    $penilaians = $hasSplit
-        ? explode('||', $item->penilaian)
-        : [$item->penilaian];
-
-    $buktis = $hasSplit
-        ? explode('||', $item->bukti_persyaratan)
-        : [$item->bukti_persyaratan];
-
-    $rows = max(
-        count($komponens),
-        count($metodes),
-        count($penilaians),
-        count($buktis)
-    );
+    $currentKategori = null;
 @endphp
 
+@foreach ($indikators as $item)
 
-@for ($i = 0; $i < $rows; $i++)
-<tr>
-    @if ($i === 0)
-        <td rowspan="{{ $rows }}" class="text-center">{{ $item->nomor }}</td>
-        <td rowspan="{{ $rows }}">{{ $item->kriteria }}</td>
-        <td rowspan="{{ $rows }}">{{ $item->indikator }}</td>
+    {{-- ================= HEADER KATEGORI ================= --}}
+    @if ($item->kategori !== $currentKategori)
+        <tr class="zi-group-header">
+            <td colspan="10">{{ strtoupper($item->kategori) }}</td>
+        </tr>
+        @php $currentKategori = $item->kategori; @endphp
     @endif
 
-    {{-- KOMPONEN (SUDAH IKUT SPLIT) --}}
-    <td>
-        {{ trim($komponens[$i] ?? $item->komponen) }}
-    </td>
+    @php
+        $hasSplit = str_contains($item->metode_pengukuran, '||');
 
-    {{-- METODE --}}
-    <td>
-        {!! nl2br(e(str_replace(';;', "\n", $metodes[$i] ?? ''))) !!}
-    </td>
+        $komponens = $hasSplit
+            ? explode('||', $item->komponen)
+            : [$item->komponen];
 
-    {{-- PENILAIAN --}}
-    <td>
-        {!! nl2br(e(str_replace(';;', "\n", $penilaians[$i] ?? ''))) !!}
-    </td>
+        $metodes = $hasSplit
+            ? explode('||', $item->metode_pengukuran)
+            : [$item->metode_pengukuran];
 
-    {{-- BUKTI --}}
-    <td>
-        {!! nl2br(e(str_replace(';;', "\n", $buktis[$i] ?? ''))) !!}
-    </td>
+        $penilaians = $hasSplit
+            ? explode('||', $item->penilaian)
+            : [$item->penilaian];
 
-    {{-- FILE --}}
-    <td>
-        <input type="file" class="form-control zi-file-input">
-    </td>
+        $buktis = $hasSplit
+            ? explode('||', $item->bukti_persyaratan)
+            : [$item->bukti_persyaratan];
 
-    @if ($i === 0)
-        <td rowspan="{{ $rows }}" class="text-center">
-            <input class="form-control zi-input" disabled>
-        </td>
-        <td rowspan="{{ $rows }}" class="text-center">
-            <input class="form-control zi-input" disabled>
-        </td>
-    @endif
-</tr>
-@endfor
+        $rows = max(
+            count($komponens),
+            count($metodes),
+            count($penilaians),
+            count($buktis)
+        );
+    @endphp
 
+    @for ($i = 0; $i < $rows; $i++)
+        <tr class="zi-group-content">
+            @if ($i === 0)
+                <td rowspan="{{ $rows }}" class="text-center">{{ $item->nomor }}</td>
+                <td rowspan="{{ $rows }}">{{ $item->kriteria }}</td>
+                <td rowspan="{{ $rows }}">{{ $item->indikator }}</td>
+            @endif
+
+            {{-- KOMPONEN --}}
+            <td>{{ trim($komponens[$i] ?? '') }}</td>
+
+            {{-- METODE --}}
+            <td>{!! nl2br(e(str_replace(';;', "\n", $metodes[$i] ?? ''))) !!}</td>
+
+            {{-- PENILAIAN --}}
+            <td>{!! nl2br(e(str_replace(';;', "\n", $penilaians[$i] ?? ''))) !!}</td>
+
+            {{-- BUKTI --}}
+            <td>{!! nl2br(e(str_replace(';;', "\n", $buktis[$i] ?? ''))) !!}</td>
+
+            {{-- FILE --}}
+            <td>
+                <input type="file" class="form-control zi-file-input">
+            </td>
+
+            @if ($i === 0)
+                <td rowspan="{{ $rows }}" class="text-center">
+                    <input class="form-control zi-input" disabled>
+                </td>
+                <td rowspan="{{ $rows }}" class="text-center">
+                    <input class="form-control zi-input" disabled>
+                </td>
+            @endif
+        </tr>
+    @endfor
 
 @endforeach
+
 </tbody>
+
+
 
 </table>
 </div>

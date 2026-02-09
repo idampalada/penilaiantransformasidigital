@@ -11,10 +11,17 @@ class ZiIndikatorController extends Controller
      */
     public function index()
     {
-        $indikators = ZiIndikator::query()
-            ->where('is_active', true)
-            ->orderBy('nomor')
-            ->get();
+    $indikators = ZiIndikator::orderByRaw("
+        CASE kategori
+            WHEN 'Proses' THEN 1
+            WHEN 'Organisasi' THEN 2
+            WHEN 'Data' THEN 3
+            WHEN 'Teknologi' THEN 4
+            ELSE 5
+        END
+    ")
+    ->orderBy('nomor')
+    ->get();
 
         return view('zi.index', compact('indikators'));
     }
