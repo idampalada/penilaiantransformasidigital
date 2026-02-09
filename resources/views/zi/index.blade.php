@@ -14,6 +14,9 @@
 
         <hr>
 
+        <form action="{{ route('zi.bukti.upload') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
         <div class="table-responsive">
         <table class="table table-bordered zi-table">
 
@@ -26,7 +29,7 @@
                     <th>Metode Pengukuran</th>
                     <th>Penilaian</th>
                     <th>Bukti / Persyaratan</th>
-                    <th width="160">File Bukti</th>
+                    <th width="180">File Bukti (PDF)</th>
                     <th width="90">Nilai Internal</th>
                     <th width="90">Nilai Eksternal</th>
                 </tr>
@@ -70,11 +73,20 @@
                     <td>{!! nl2br(e($penilaians[0])) !!}</td>
                 @endif
 
-                {{-- BUKTI --}}
+                {{-- BUKTI / PERSYARATAN --}}
                 <td>{!! nl2br(e($item->bukti_persyaratan)) !!}</td>
 
-                {{-- FILE --}}
-                <td><em class="text-muted">Belum ada file</em></td>
+                {{-- FILE BUKTI --}}
+                <td>
+                    @foreach ($metodes as $i => $m)
+                        <div style="margin-bottom:6px">
+                            <input type="file"
+                                   name="bukti[{{ $item->id }}][{{ $hasSplit ? $i : 'single' }}]"
+                                   accept="application/pdf"
+                                   class="form-control">
+                        </div>
+                    @endforeach
+                </td>
 
                 {{-- NILAI --}}
                 <td><input type="text" class="form-control zi-input" disabled></td>
@@ -88,10 +100,14 @@
                 </td>
             </tr>
             @endforelse
+
             </tbody>
 
         </table>
         </div>
+
+        <button class="btn btn-primary">Simpan Bukti</button>
+        </form>
 
     </div>
 </div>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ZiIndikatorController;
+use App\Http\Controllers\ZiBuktiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,3 +26,6 @@ Route::get('/', function () {
 });
 
 Route::get('/', [ZiIndikatorController::class, 'index']);
+
+Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
+    ->name('zi.bukti.upload');
