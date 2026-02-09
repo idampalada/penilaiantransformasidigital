@@ -5,10 +5,47 @@
 <div class="row">
 <div class="col-md-12">
 
-<h4><strong>LEMBAR KERJA EVALUASI ZONA INTEGRITAS (ZI)</strong></h4>
+<h4><strong>PENILAIAN TRANSFORMASI DIGITAL</strong></h4>
 <p><strong>PUSAT DATA DAN TEKNOLOGI INFORMASI</strong></p>
+@if(Auth::check())
+    <div class="row" style="margin-bottom:15px;">
+        <div class="col-md-12">
+            <div class="well well-sm" style="padding:8px 12px;">
+                <div class="pull-left">
+                    👤 <strong>{{ Auth::user()->name }}</strong>
+                    <span class="text-muted">
+                        | Role: {{ ucfirst(Auth::user()->role) }}
+                    </span>
+                </div>
+
+                <div class="pull-right">
+                    <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-xs">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+@endif
+
 
 <hr>
+<div class="row" style="margin-bottom:10px;">
+    <div class="col-md-3">
+        <select id="filterKategori" class="form-control input-sm">
+            <option value="all">Keseluruhan</option>
+            <option value="PROSES">Proses</option>
+            <option value="ORGANISASI">Organisasi</option>
+            <option value="TEKNOLOGI">Teknologi</option>
+            <option value="DATA">Data</option>
+        </select>
+    </div>
+</div>
 
 <div class="table-responsive">
 <table class="table table-bordered zi-table">
@@ -36,9 +73,10 @@
 
     {{-- ================= HEADER KATEGORI ================= --}}
     @if ($item->kategori !== $currentKategori)
-        <tr class="zi-group-header">
-            <td colspan="10"><strong>{{ strtoupper($item->kategori) }}</strong></td>
-        </tr>
+<tr class="zi-group-header" data-kategori="{{ strtoupper($item->kategori) }}">
+    <td colspan="10"><strong>{{ strtoupper($item->kategori) }}</strong></td>
+</tr>
+
         @php $currentKategori = $item->kategori; @endphp
     @endif
 
@@ -48,7 +86,8 @@
 
         @foreach ($group['rows'] as $idx => $row)
 
-        <tr>
+        <tr class="zi-row" data-kategori="{{ strtoupper($item->kategori) }}">
+
             {{-- NO / KRITERIA / INDIKATOR --}}
             @if ($firstItemRow)
                 <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
@@ -108,5 +147,29 @@
 
 </div>
 </div>
+<script>
+document.getElementById('filterKategori').addEventListener('change', function () {
+    var selected = this.value;
+
+    var headers = document.querySelectorAll('.zi-group-header');
+    var rows = document.querySelectorAll('.zi-row');
+
+    if (selected === 'all') {
+        headers.forEach(el => el.style.display = '');
+        rows.forEach(el => el.style.display = '');
+        return;
+    }
+
+    headers.forEach(function (el) {
+        el.style.display =
+            el.getAttribute('data-kategori') === selected ? '' : 'none';
+    });
+
+    rows.forEach(function (el) {
+        el.style.display =
+            el.getAttribute('data-kategori') === selected ? '' : 'none';
+    });
+});
+</script>
 
 @endsection

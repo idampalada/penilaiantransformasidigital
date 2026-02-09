@@ -99,6 +99,28 @@
 .zi-table th {
     vertical-align: middle !important;
 }
+/* ==========================
+   STICKY TABLE HEADER (FIX)
+========================== */
+.table-responsive {
+    max-height: 75vh;
+    overflow: auto;
+}
+
+.zi-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #003366 !important;
+    color: #fff;
+}
+
+/* kalau ada header kategori */
+.zi-group-header td {
+    position: sticky;
+    top: 34px; /* tinggi thead */
+    z-index: 19;
+}
 
     </style>
     
