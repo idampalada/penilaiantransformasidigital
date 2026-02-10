@@ -85,44 +85,48 @@
             width: 100%;
             font-size: 11px;
         }
+
         /* ================= GROUP HEADER ================= */
-.zi-group-header td {
-    background: #0099FF; /* biru tua */
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    font-size: 13px;
-    padding: 8px;
-}
+        .zi-group-header td {
+            background: #0099FF; /* biru tua */
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            font-size: 13px;
+            padding: 8px;
+        }
 
-.zi-table td,
-.zi-table th {
-    vertical-align: middle !important;
-}
-/* ==========================
-   STICKY TABLE HEADER (FIX)
-========================== */
-.table-responsive {
-    max-height: 75vh;
-    overflow: auto;
-}
+        .zi-table td,
+        .zi-table th {
+            vertical-align: middle !important;
+        }
 
-.zi-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: #003366 !important;
-    color: #fff;
-}
+        /* ==========================
+           STICKY TABLE HEADER (FIX)
+        ========================== */
+        .table-responsive {
+            max-height: 75vh;
+            overflow: auto;
+        }
 
-/* kalau ada header kategori */
-.zi-group-header td {
-    position: sticky;
-    top: 34px; /* tinggi thead */
-    z-index: 19;
-}
+        .zi-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: #003366 !important;
+            color: #fff;
+        }
 
-    </style>
+        /* ==========================
+           STICKY HEADER KATEGORI (FIX FINAL)
+        ========================== */
+        .zi-group-header {
+            position: sticky;
+            top: 49px; /* tinggi thead */
+            z-index: 19;
+        }
+</style>
+
     
 </head>
 <body>

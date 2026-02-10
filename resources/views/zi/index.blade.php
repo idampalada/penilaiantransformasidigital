@@ -60,10 +60,14 @@
     <th>Penilaian</th>
     <th>Bukti / Persyaratan</th>
     <th>File Bukti</th>
-    <th>Nilai Internal</th>
-    <th>Nilai Eksternal</th>
+    <th>Penilaian Mandiri</th>
+    <th>Penilaian Tahap 1</th>
+    <th>Note Penilaian 1</th>
+    <th>Penilaian Tahap 2</th>
+    <th>Note Penilaian 2</th>
 </tr>
 </thead>
+
 
 <tbody>
 
@@ -72,73 +76,111 @@
 @foreach ($indikators as $item)
 
     {{-- ================= HEADER KATEGORI ================= --}}
-    @if ($item->kategori !== $currentKategori)
+@if ($item->kategori !== $currentKategori)
 <tr class="zi-group-header" data-kategori="{{ strtoupper($item->kategori) }}">
-    <td colspan="10"><strong>{{ strtoupper($item->kategori) }}</strong></td>
+    <td colspan="13"><strong>{{ strtoupper($item->kategori) }}</strong></td>
 </tr>
+    @php $currentKategori = $item->kategori; @endphp
+@endif
 
-        @php $currentKategori = $item->kategori; @endphp
+@php $firstItemRow = true; @endphp
+
+@foreach ($item->groups as $group)
+@foreach ($group['rows'] as $idx => $row)
+
+<tr class="zi-row" data-kategori="{{ strtoupper($item->kategori) }}">
+
+    {{-- NO / KRITERIA / INDIKATOR --}}
+    @if ($firstItemRow)
+        <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
+            {{ $item->nomor }}
+        </td>
+        <td rowspan="{{ $item->total_rows }}" class="align-middle">
+            {{ $item->kriteria }}
+        </td>
+        <td rowspan="{{ $item->total_rows }}" class="align-middle">
+            {{ $item->indikator }}
+        </td>
     @endif
 
-    @php $firstItemRow = true; @endphp
+    {{-- KOMPONEN --}}
+    @if ($idx === 0)
+        <td rowspan="{{ $group['rowspan'] }}" class="align-middle">
+            {{ $group['komponen'] }}
+        </td>
+    @endif
 
-    @foreach ($item->groups as $group)
+    {{-- METODE --}}
+    <td>{!! nl2br(e($row['metode'])) !!}</td>
 
-        @foreach ($group['rows'] as $idx => $row)
+    {{-- PENILAIAN --}}
+    <td>{!! nl2br(e($row['penilaian'])) !!}</td>
 
-        <tr class="zi-row" data-kategori="{{ strtoupper($item->kategori) }}">
+    {{-- BUKTI --}}
+    <td>{!! nl2br(e($row['bukti'])) !!}</td>
 
-            {{-- NO / KRITERIA / INDIKATOR --}}
-            @if ($firstItemRow)
-                <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
-                    {{ $item->nomor }}
-                </td>
-                <td rowspan="{{ $item->total_rows }}" class="align-middle">
-                    {{ $item->kriteria }}
-                </td>
-                <td rowspan="{{ $item->total_rows }}" class="align-middle">
-                    {{ $item->indikator }}
-                </td>
-            @endif
+    {{-- FILE BUKTI --}}
+    <td>
+        <input type="file" class="form-control input-sm">
+    </td>
 
-            {{-- KOMPONEN --}}
-            @if ($idx === 0)
-                <td rowspan="{{ $group['rowspan'] }}" class="align-middle">
-                    {{ $group['komponen'] }}
-                </td>
-            @endif
+    {{-- PENILAIAN MANDIRI --}}
+    <td>
+        <input
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+            class="form-control input-sm"
+            placeholder="0 - 1">
+    </td>
 
-            {{-- METODE --}}
-            <td>{!! nl2br(e($row['metode'])) !!}</td>
+    {{-- PENILAIAN TAHAP 1 --}}
+    <td>
+        <input
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+            class="form-control input-sm"
+            placeholder="0 - 1">
+    </td>
 
-            {{-- PENILAIAN --}}
-            <td>{!! nl2br(e($row['penilaian'])) !!}</td>
+    {{-- NOTE PENILAIAN 1 --}}
+    <td>
+        <textarea
+            class="form-control input-sm"
+            rows="2"
+            placeholder="Catatan Penilaian 1"></textarea>
+    </td>
 
-            {{-- BUKTI --}}
-            <td>{!! nl2br(e($row['bukti'])) !!}</td>
+    {{-- PENILAIAN TAHAP 2 --}}
+    <td>
+        <input
+            type="number"
+            min="0"
+            max="1"
+            step="0.1"
+            class="form-control input-sm"
+            placeholder="0 - 1">
+    </td>
 
-            {{-- FILE --}}
-            <td>
-                <input type="file" class="form-control">
-            </td>
+    {{-- NOTE PENILAIAN 2 --}}
+    <td>
+        <textarea
+            class="form-control input-sm"
+            rows="2"
+            placeholder="Catatan Penilaian 2"></textarea>
+    </td>
 
-            {{-- NILAI --}}
-            @if ($firstItemRow)
-                <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
-                    <input class="form-control" disabled>
-                </td>
-                <td rowspan="{{ $item->total_rows }}" class="text-center align-middle">
-                    <input class="form-control" disabled>
-                </td>
-            @endif
-        </tr>
+</tr>
 
-        @php $firstItemRow = false; @endphp
-
-        @endforeach
-    @endforeach
+@php $firstItemRow = false; @endphp
 
 @endforeach
+@endforeach
+@endforeach
+
 
 </tbody>
 
