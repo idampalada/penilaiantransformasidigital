@@ -110,3 +110,106 @@ body {
     top: 49px; /* tinggi thead */
     z-index: 19;
 }
+
+/* ===============================
+   CUSTOM WIDTH PER KOLOM (ZI)
+   =============================== */
+
+/* No */
+.zi-table th:nth-child(1),
+.zi-table td:nth-child(1) {
+    width: 49px;
+    min-width: 49px;
+    text-align: center;
+}
+
+/* Kriteria */
+.zi-table th:nth-child(2),
+.zi-table td:nth-child(2) {
+    width: 140px;
+    min-width: 140px;
+}
+
+/* Indikator */
+.zi-table th:nth-child(3),
+.zi-table td:nth-child(3) {
+    width: 180px;
+    min-width: 180px;
+}
+
+/* Komponen */
+.zi-table th:nth-child(4),
+.zi-table td:nth-child(4) {
+    width: 160px;
+    min-width: 160px;
+}
+
+/* Metode Pengukuran */
+.zi-table th:nth-child(5),
+.zi-table td:nth-child(5) {
+    width: 220px;
+    min-width: 220px;
+}
+
+/* Penilaian */
+.zi-table th:nth-child(6),
+.zi-table td:nth-child(6) {
+    width: 180px;
+    min-width: 180px;
+}
+
+/* Bukti / Persyaratan */
+.zi-table th:nth-child(7),
+.zi-table td:nth-child(7) {
+    width: 200px;
+    min-width: 200px;
+}
+
+/* File Bukti 1 */
+.zi-table th:nth-child(8),
+.zi-table td:nth-child(8) {
+    width: 220px;
+    min-width: 220px;
+}
+
+/* Penilaian Mandiri */
+.zi-table th:nth-child(9),
+.zi-table td:nth-child(9) {
+    width: 78px;
+    min-width: 120px;
+}
+
+/* Penilaian Tahap 1 */
+.zi-table th:nth-child(10),
+.zi-table td:nth-child(10) {
+    width: 78px;
+    min-width: 120px;
+}
+
+/* Note Penilaian 1 */
+.zi-table th:nth-child(11),
+.zi-table td:nth-child(11) {
+    width: 200px;
+    min-width: 200px;
+}
+
+/* File Bukti 2 */
+.zi-table th:nth-child(12),
+.zi-table td:nth-child(12) {
+    width: 220px;
+    min-width: 220px;
+}
+
+/* Penilaian Tahap 2 */
+.zi-table th:nth-child(13),
+.zi-table td:nth-child(13) {
+    width: 78px;
+    min-width: 120px;
+}
+
+/* Note Penilaian 2 */
+.zi-table th:nth-child(14),
+.zi-table td:nth-child(14) {
+    width: 200px;
+    min-width: 200px;
+}

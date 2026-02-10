@@ -22,3 +22,11 @@ document
                 el.getAttribute("data-kategori") === selected ? "" : "none";
         });
     });
+
+document.querySelectorAll(".auto-upload").forEach((input) => {
+    input.addEventListener("change", function () {
+        if (this.files.length > 0) {
+            this.closest("form").submit();
+        }
+    });
+});

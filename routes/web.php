@@ -61,7 +61,7 @@ require __DIR__ . '/auth.php';
 */
 
 Route::prefix('admin')
-    ->middleware(['auth']) // nanti bisa ditambah role:superadmin
+    ->middleware(['auth', 'only.superadmin'])
     ->name('admin.')
     ->group(function () {
 

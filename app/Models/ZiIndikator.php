@@ -17,6 +17,14 @@ class ZiIndikator extends Model
         'metode_pengukuran',
         'penilaian',
         'bukti_persyaratan',
+                'file_bukti_1',
+        'file_bukti_2',
+            // penilaian
+    'penilaian_mandiri',
+    'penilaian_tahap_1',
+    'note_penilaian_1',
+    'penilaian_tahap_2',
+    'note_penilaian_2',
         'is_active',
     ];
 }

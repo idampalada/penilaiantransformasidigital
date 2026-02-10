@@ -35,6 +35,23 @@
 
 
 <hr>
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="alert alert-danger">
+        <ul style="margin:0;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="row" style="margin-bottom:10px;">
     <div class="col-md-3">
         <select id="filterKategori" class="form-control input-sm">
@@ -48,7 +65,14 @@
 </div>
 
 <div class="table-responsive">
+
+<form action="{{ route('zi.bukti.upload') }}"
+      method="POST"
+      enctype="multipart/form-data">
+@csrf
+
 <table class="table table-bordered zi-table">
+
 
 <thead>
 <tr>
@@ -59,10 +83,11 @@
     <th>Metode Pengukuran</th>
     <th>Penilaian</th>
     <th>Bukti / Persyaratan</th>
-    <th>File Bukti</th>
+    <th>File Bukti 1</th>
     <th>Penilaian Mandiri</th>
     <th>Penilaian Tahap 1</th>
     <th>Note Penilaian 1</th>
+    <th>File Bukti 2</th>
     <th>Penilaian Tahap 2</th>
     <th>Note Penilaian 2</th>
 </tr>
@@ -78,7 +103,7 @@
     {{-- ================= HEADER KATEGORI ================= --}}
 @if ($item->kategori !== $currentKategori)
 <tr class="zi-group-header" data-kategori="{{ strtoupper($item->kategori) }}">
-    <td colspan="13"><strong>{{ strtoupper($item->kategori) }}</strong></td>
+    <td colspan="14"><strong>{{ strtoupper($item->kategori) }}</strong></td>
 </tr>
     @php $currentKategori = $item->kategori; @endphp
 @endif
@@ -120,57 +145,100 @@
     <td>{!! nl2br(e($row['bukti'])) !!}</td>
 
     {{-- FILE BUKTI --}}
-    <td>
-        <input type="file" class="form-control input-sm">
-    </td>
+<td>
+    <input type="file"
+           name="file_bukti_1[{{ $item->id }}]"
+           accept="application/pdf"
+           class="form-control input-sm zi-file-input">
+
+    @if($item->file_bukti_1)
+        <div style="margin-top:4px; font-size:11px;">
+            📄
+            <a href="{{ asset('storage/' . $item->file_bukti_1) }}"
+               target="_blank">
+                {{ basename($item->file_bukti_1) }}
+            </a>
+        </div>
+    @endif
+</td>
+
 
     {{-- PENILAIAN MANDIRI --}}
     <td>
-        <input
-            type="number"
-            min="0"
-            max="1"
-            step="0.1"
-            class="form-control input-sm"
-            placeholder="0 - 1">
+<input type="number"
+       name="penilaian_mandiri[{{ $item->id }}]"
+       min="0"
+       max="1"
+       step="0.01"
+       value="{{ old('penilaian_mandiri.' . $item->id, $item->penilaian_mandiri) }}"
+       class="form-control input-sm"
+       placeholder="0 - 1">
+
     </td>
 
     {{-- PENILAIAN TAHAP 1 --}}
     <td>
-        <input
-            type="number"
-            min="0"
-            max="1"
-            step="0.1"
-            class="form-control input-sm"
-            placeholder="0 - 1">
+<input type="number"
+       name="penilaian_tahap_1[{{ $item->id }}]"
+       min="0"
+       max="1"
+       step="0.01"
+       value="{{ old('penilaian_tahap_1.' . $item->id, $item->penilaian_tahap_1) }}"
+       class="form-control input-sm"
+       placeholder="0 - 1">
+
     </td>
 
     {{-- NOTE PENILAIAN 1 --}}
     <td>
-        <textarea
-            class="form-control input-sm"
-            rows="2"
-            placeholder="Catatan Penilaian 1"></textarea>
+<textarea name="note_penilaian_1[{{ $item->id }}]"
+          class="form-control input-sm"
+          rows="2"
+          placeholder="Catatan Penilaian 1">{{ old('note_penilaian_1.' . $item->id, $item->note_penilaian_1) }}</textarea>
+
     </td>
+
+
+{{-- BUKTI FILE 2 --}}
+<td>
+    <input type="file"
+           name="file_bukti_2[{{ $item->id }}]"
+           accept="application/pdf"
+           class="form-control input-sm zi-file-input">
+
+    @if($item->file_bukti_2)
+        <div style="margin-top:4px; font-size:11px;">
+            📄
+            <a href="{{ asset('storage/' . $item->file_bukti_2) }}"
+               target="_blank">
+                {{ basename($item->file_bukti_2) }}
+            </a>
+        </div>
+    @endif
+</td>
+
+
 
     {{-- PENILAIAN TAHAP 2 --}}
     <td>
-        <input
-            type="number"
-            min="0"
-            max="1"
-            step="0.1"
-            class="form-control input-sm"
-            placeholder="0 - 1">
+<input type="number"
+       name="penilaian_tahap_2[{{ $item->id }}]"
+       min="0"
+       max="1"
+       step="0.01"
+       value="{{ old('penilaian_tahap_2.' . $item->id, $item->penilaian_tahap_2) }}"
+       class="form-control input-sm"
+       placeholder="0 - 1">
+
     </td>
 
     {{-- NOTE PENILAIAN 2 --}}
     <td>
-        <textarea
-            class="form-control input-sm"
-            rows="2"
-            placeholder="Catatan Penilaian 2"></textarea>
+<textarea name="note_penilaian_2[{{ $item->id }}]"
+          class="form-control input-sm"
+          rows="2"
+          placeholder="Catatan Penilaian 2">{{ old('note_penilaian_2.' . $item->id, $item->note_penilaian_2) }}</textarea>
+
     </td>
 
 </tr>
@@ -185,6 +253,14 @@
 </tbody>
 
 </table>
+
+<div class="text-end mt-3">
+    <button type="submit" class="btn btn-primary">
+        Simpan
+    </button>
+</div>
+
+</form>
 </div>
 
 </div>
