@@ -80,6 +80,12 @@ body {
     font-size: 13px;
     padding: 8px;
 }
+.zi-total-kategori td {
+    background: #cceaff; /* biru muda */
+    font-weight: bold;
+    text-align: center;
+    font-size: 13px;
+}
 
 .zi-table td,
 .zi-table th {

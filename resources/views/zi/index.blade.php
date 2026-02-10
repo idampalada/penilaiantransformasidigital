@@ -64,12 +64,33 @@
     </div>
 </div>
 
+@php
+$kategoriTotals = [];
+
+foreach ($indikators as $it) {
+    $kat = strtoupper($it->kategori);
+
+    if (!isset($kategoriTotals[$kat])) {
+        $kategoriTotals[$kat] = [
+            'mandiri' => 0,
+            'tahap1'  => 0,
+            'tahap2'  => 0,
+        ];
+    }
+
+    $kategoriTotals[$kat]['mandiri'] += floatval($it->penilaian_mandiri ?? 0);
+    $kategoriTotals[$kat]['tahap1']  += floatval($it->penilaian_tahap_1 ?? 0);
+    $kategoriTotals[$kat]['tahap2']  += floatval($it->penilaian_tahap_2 ?? 0);
+}
+@endphp
+
 <div class="table-responsive">
 
 <form action="{{ route('zi.bukti.upload') }}"
       method="POST"
       enctype="multipart/form-data">
 @csrf
+
 
 <table class="table table-bordered zi-table">
 
@@ -102,11 +123,38 @@
 
     {{-- ================= HEADER KATEGORI ================= --}}
 @if ($item->kategori !== $currentKategori)
-<tr class="zi-group-header" data-kategori="{{ strtoupper($item->kategori) }}">
-    <td colspan="14"><strong>{{ strtoupper($item->kategori) }}</strong></td>
+
+@php
+    $kat = strtoupper($item->kategori);
+@endphp
+
+<tr class="zi-group-header" data-kategori="{{ $kat }}">
+    <td colspan="14"><strong>{{ $kat }}</strong></td>
 </tr>
-    @php $currentKategori = $item->kategori; @endphp
+
+<tr class="zi-total-kategori">
+    <td colspan="8" class="text-right">
+        <strong>TOTAL {{ $kat }}</strong>
+    </td>
+    <td>
+        <strong>{{ number_format($kategoriTotals[$kat]['mandiri'], 2) }}</strong>
+    </td>
+    <td>
+        <strong>{{ number_format($kategoriTotals[$kat]['tahap1'], 2) }}</strong>
+    </td>
+    <td></td>
+    <td></td>
+    <td>
+        <strong>{{ number_format($kategoriTotals[$kat]['tahap2'], 2) }}</strong>
+    </td>
+    <td></td>
+</tr>
+
+@php
+    $currentKategori = $item->kategori;
+@endphp
 @endif
+
 
 @php $firstItemRow = true; @endphp
 
@@ -253,6 +301,7 @@
 </tbody>
 
 </table>
+
 
 <div class="text-end mt-3">
     <button type="submit" class="btn btn-primary">
