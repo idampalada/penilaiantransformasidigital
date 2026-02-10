@@ -8,6 +8,14 @@ use App\Http\Controllers\Admin\ZiAdminIndikatorController;
 use App\Http\Controllers\Admin\ZiAdminUserController;
 use App\Http\Controllers\Admin\ZiAdminUnitController;
 
+
+
+
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
 /*
 |--------------------------------------------------------------------------
 | PUBLIC / UNOR
@@ -15,13 +23,18 @@ use App\Http\Controllers\Admin\ZiAdminUnitController;
 */
 
 // Landing ZI (UNOR)
-Route::get('/', [ZiIndikatorController::class, 'index'])
+Route::prefix('unor')
     ->middleware(['auth', 'only.unor'])
-    ->name('zi.index');
+    ->group(function () {
 
-// Upload bukti oleh UNOR
-Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
-    ->name('zi.bukti.upload');
+        // Landing ZI UNOR
+        Route::get('/', [ZiIndikatorController::class, 'index'])
+            ->name('zi.index');
+
+        // Upload bukti oleh UNOR
+        Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
+            ->name('zi.bukti.upload');
+    });
 
 /*
 |--------------------------------------------------------------------------
