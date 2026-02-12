@@ -84,6 +84,42 @@ foreach ($indikators as $it) {
 }
 @endphp
 
+@php
+$kategoriTotals = [];
+
+$grandTotal = [
+    'mandiri' => 0,
+    'tahap1'  => 0,
+    'tahap2'  => 0,
+];
+
+foreach ($indikators as $it) {
+    $kat = strtoupper($it->kategori);
+
+    if (!isset($kategoriTotals[$kat])) {
+        $kategoriTotals[$kat] = [
+            'mandiri' => 0,
+            'tahap1'  => 0,
+            'tahap2'  => 0,
+        ];
+    }
+
+    $mandiri = floatval($it->penilaian_mandiri ?? 0);
+    $t1      = floatval($it->penilaian_tahap_1 ?? 0);
+    $t2      = floatval($it->penilaian_tahap_2 ?? 0);
+
+    // total per kategori
+    $kategoriTotals[$kat]['mandiri'] += $mandiri;
+    $kategoriTotals[$kat]['tahap1']  += $t1;
+    $kategoriTotals[$kat]['tahap2']  += $t2;
+
+    // TOTAL KESELURUHAN
+    $grandTotal['mandiri'] += $mandiri;
+    $grandTotal['tahap1']  += $t1;
+    $grandTotal['tahap2']  += $t2;
+}
+@endphp
+
 <div class="table-responsive">
 
 <form action="{{ route('zi.bukti.upload') }}"
@@ -296,7 +332,23 @@ foreach ($indikators as $it) {
 @endforeach
 @endforeach
 @endforeach
-
+<tr class="zi-grand-total">
+    <td colspan="8" class="text-right">
+        <strong>TOTAL KESELURUHAN</strong>
+    </td>
+    <td>
+        <strong>{{ number_format($grandTotal['mandiri'], 2) }}</strong>
+    </td>
+    <td>
+        <strong>{{ number_format($grandTotal['tahap1'], 2) }}</strong>
+    </td>
+    <td></td>
+    <td></td>
+    <td>
+        <strong>{{ number_format($grandTotal['tahap2'], 2) }}</strong>
+    </td>
+    <td></td>
+</tr>
 
 </tbody>
 

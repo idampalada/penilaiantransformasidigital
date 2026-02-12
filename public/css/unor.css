@@ -87,6 +87,14 @@ body {
     font-size: 13px;
 }
 
+.zi-grand-total td {
+    background: #a7d3ff;
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+    border-top: 3px solid #0066cc;
+}
+
 .zi-table td,
 .zi-table th {
     vertical-align: middle !important;
