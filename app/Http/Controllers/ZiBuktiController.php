@@ -6,105 +6,148 @@ use Illuminate\Http\Request;
 use App\Models\ZiIndikator;
 use App\Models\ZiBukti;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ZiPenilaian;
+
 
 class ZiBuktiController extends Controller
 {
     public function upload(Request $request)
-    {
-        $user   = auth()->user();
-        $role   = $user->role->name ?? null;
-        $tahun  = 2025;
-        $unitId = $user->unit_id ?? 1;
+{
+    $user   = auth()->user();
+    $role   = $user->role->name ?? null;
+    $tahun  = 2025;
+    $unitId = $user->unit_id;
 
-        /*
-        |--------------------------------------------------------------------------
-        | HANDLE FILE UPLOAD
-        |--------------------------------------------------------------------------
-        */
+    /*
+    |--------------------------------------------------------------------------
+    | HANDLE FILE UPLOAD
+    |--------------------------------------------------------------------------
+    */
 
-        $allFiles = $request->allFiles();
+    $allFiles = $request->allFiles();
 
-        if (!empty($allFiles)) {
+    if (!empty($allFiles)) {
 
-            foreach ($allFiles as $inputName => $indikatorFiles) {
+        foreach ($allFiles as $inputName => $indikatorFiles) {
 
-                foreach ($indikatorFiles as $indikatorId => $files) {
+            foreach ($indikatorFiles as $indikatorId => $files) {
 
-                    if (!is_array($files)) {
-                        $files = [$files];
+                if (!is_array($files)) {
+                    $files = [$files];
+                }
+
+                foreach ($files as $file) {
+
+                    if (!$file || !$file->isValid()) {
+                        continue;
                     }
 
-                    foreach ($files as $file) {
+                    $filename = time().'_'.$file->getClientOriginalName();
 
-                        if (!$file || !$file->isValid()) {
-                            continue;
-                        }
+                    // Folder berdasarkan nama unit
+                    $unitFolder = $user->unit->nama;
 
-                        $filename = time().'_'.$file->getClientOriginalName();
+                    $path = $file->storeAs(
+                        "UNOR/{$unitFolder}",
+                        $filename,
+                        'public'
+                    );
 
-$path = $file->storeAs(
-    "UNOR/Bina Marga",
-    $filename,
-    'public'
-);
-
-
-                        ZiBukti::create([
-                            'zi_indikator_id' => $indikatorId,
-                            'unit_id'         => $unitId,
-                            'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
-                            'file_name'       => $file->getClientOriginalName(),
-                            'file_path'       => $path,
-                            'tahun'           => $tahun,
-                        ]);
-                    }
+                    ZiBukti::create([
+                        'zi_indikator_id' => $indikatorId,
+                        'unit_id'         => $unitId,
+                        'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
+                        'file_name'       => $file->getClientOriginalName(),
+                        'file_path'       => $path,
+                        'tahun'           => $tahun,
+                    ]);
                 }
             }
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PENILAIAN MANDIRI (SEMUA USER BOLEH)
-        |--------------------------------------------------------------------------
-        */
-
-        foreach ($request->penilaian_mandiri ?? [] as $id => $nilai) {
-            ZiIndikator::where('id', $id)
-                ->update(['penilaian_mandiri' => $nilai]);
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PENILAIAN TAHAP 1 & 2 (HANYA TIM PENILAI / SUPERADMIN)
-        |--------------------------------------------------------------------------
-        */
-
-        if (in_array($role, ['superadmin', 'timpenilai'])) {
-
-            foreach ($request->penilaian_tahap_1 ?? [] as $id => $nilai) {
-                ZiIndikator::where('id', $id)
-                    ->update(['penilaian_tahap_1' => $nilai]);
-            }
-
-            foreach ($request->note_penilaian_1 ?? [] as $id => $note) {
-                ZiIndikator::where('id', $id)
-                    ->update(['note_penilaian_1' => $note]);
-            }
-
-            foreach ($request->penilaian_tahap_2 ?? [] as $id => $nilai) {
-                ZiIndikator::where('id', $id)
-                    ->update(['penilaian_tahap_2' => $nilai]);
-            }
-
-            foreach ($request->note_penilaian_2 ?? [] as $id => $note) {
-                ZiIndikator::where('id', $id)
-                    ->update(['note_penilaian_2' => $note]);
-            }
-
-        }
-
-        return back()->with('success', 'Data berhasil disimpan');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE / CREATE PENILAIAN (SEMUA USER)
+    |--------------------------------------------------------------------------
+    */
+
+    foreach ($request->penilaian_mandiri ?? [] as $indikatorId => $nilai) {
+
+        ZiPenilaian::updateOrCreate(
+            [
+                'indikator_id' => $indikatorId,
+                'unit_id'      => $unitId,
+            ],
+            [
+                'penilaian_mandiri' => $nilai,
+            ]
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | TAHAP 1 & 2 (HANYA TIM PENILAI / SUPERADMIN)
+    |--------------------------------------------------------------------------
+    */
+
+    if (in_array($role, ['superadmin', 'timpenilai'])) {
+
+        foreach ($request->penilaian_tahap_1 ?? [] as $indikatorId => $nilai) {
+
+            ZiPenilaian::updateOrCreate(
+                [
+                    'indikator_id' => $indikatorId,
+                    'unit_id'      => $unitId,
+                ],
+                [
+                    'penilaian_tahap_1' => $nilai,
+                ]
+            );
+        }
+
+        foreach ($request->note_penilaian_1 ?? [] as $indikatorId => $note) {
+
+            ZiPenilaian::updateOrCreate(
+                [
+                    'indikator_id' => $indikatorId,
+                    'unit_id'      => $unitId,
+                ],
+                [
+                    'note_penilaian_1' => $note,
+                ]
+            );
+        }
+
+        foreach ($request->penilaian_tahap_2 ?? [] as $indikatorId => $nilai) {
+
+            ZiPenilaian::updateOrCreate(
+                [
+                    'indikator_id' => $indikatorId,
+                    'unit_id'      => $unitId,
+                ],
+                [
+                    'penilaian_tahap_2' => $nilai,
+                ]
+            );
+        }
+
+        foreach ($request->note_penilaian_2 ?? [] as $indikatorId => $note) {
+
+            ZiPenilaian::updateOrCreate(
+                [
+                    'indikator_id' => $indikatorId,
+                    'unit_id'      => $unitId,
+                ],
+                [
+                    'note_penilaian_2' => $note,
+                ]
+            );
+        }
+    }
+
+    return back()->with('success', 'Data berhasil disimpan');
+}
 
     /*
     |--------------------------------------------------------------------------
@@ -113,15 +156,20 @@ $path = $file->storeAs(
     */
 
     public function delete($id)
-    {
-        $bukti = ZiBukti::findOrFail($id);
+{
+    $user = auth()->user();
 
-        if ($bukti->file_path && Storage::disk('public')->exists($bukti->file_path)) {
-            Storage::disk('public')->delete($bukti->file_path);
-        }
+    $bukti = ZiBukti::where('id', $id)
+                    ->where('unit_id', $user->unit_id)
+                    ->firstOrFail();
 
-        $bukti->delete();
-
-        return back()->with('success', 'File berhasil dihapus');
+    if ($bukti->file_path && Storage::disk('public')->exists($bukti->file_path)) {
+        Storage::disk('public')->delete($bukti->file_path);
     }
+
+    $bukti->delete();
+
+    return back()->with('success', 'File berhasil dihapus');
+}
+
 }

@@ -32,22 +32,7 @@
                 </select>
             </div>
 
-            {{-- ROLE DEFAULT --}}
-            <div class="form-group mb-4">
-                <label>Role Default User</label>
-                <select name="role_id" class="form-control" required>
-                    <option value="">-- Pilih Role --</option>
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->id }}">
-                            {{ $role->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <small class="text-muted">
-                    Role ini otomatis dipakai saat membuat user UNOR
-                </small>
-            </div>
-
+            
             <button class="btn btn-success">Simpan</button>
             <a href="{{ route('admin.units.index') }}" class="btn btn-secondary">Kembali</a>
         </form>

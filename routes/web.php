@@ -8,9 +8,11 @@ use App\Http\Controllers\Admin\ZiAdminIndikatorController;
 use App\Http\Controllers\Admin\ZiAdminUserController;
 use App\Http\Controllers\Admin\ZiAdminUnitController;
 
-
-
-
+/*
+|--------------------------------------------------------------------------
+| ROOT
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -18,51 +20,55 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| PUBLIC / UNOR
+| UNOR (USER / TIM PENILAI)
 |--------------------------------------------------------------------------
 */
 
-// Landing ZI (UNOR)
 Route::prefix('unor')
     ->middleware(['auth', 'only.unor'])
     ->group(function () {
 
-        // Landing ZI UNOR
+        // Landing ZI
         Route::get('/', [ZiIndikatorController::class, 'index'])
             ->name('zi.index');
 
-        // Upload bukti oleh UNOR
+        // Upload bukti & simpan penilaian
         Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
             ->name('zi.bukti.upload');
 
-                        // DELETE bukti
-Route::delete('/zi/bukti/{id}', [ZiBuktiController::class, 'delete'])
-    ->whereNumber('id')
-    ->name('zi.bukti.delete');
-
+        // Delete bukti (aman per unit)
+        Route::delete('/zi/bukti/{id}', [ZiBuktiController::class, 'delete'])
+            ->whereNumber('id')
+            ->name('zi.bukti.delete');
     });
 
 /*
 |--------------------------------------------------------------------------
-| AUTH
+| AUTH / PROFILE
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
 });
 
 require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN - MASTER INDIKATOR ZI
+| ADMIN (SUPERADMIN ONLY)
 |--------------------------------------------------------------------------
 */
 
@@ -71,44 +77,57 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        // LIST
+        /*
+        |--------------------------------------------------------------------------
+        | MASTER INDIKATOR
+        |--------------------------------------------------------------------------
+        */
+
         Route::get('/indikator', [ZiAdminIndikatorController::class, 'index'])
             ->name('indikator.index');
 
-        // CREATE
         Route::get('/indikator/create', [ZiAdminIndikatorController::class, 'create'])
             ->name('indikator.create');
 
         Route::post('/indikator', [ZiAdminIndikatorController::class, 'store'])
             ->name('indikator.store');
 
-        // EDIT
         Route::get('/indikator/{indikator}/edit', [ZiAdminIndikatorController::class, 'edit'])
             ->name('indikator.edit');
 
-        // UPDATE
         Route::put('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'update'])
             ->name('indikator.update');
 
-        // (opsional) DELETE
         Route::delete('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'destroy'])
             ->name('indikator.destroy');
 
-            // ===== MASTER INDIKATOR =====
-        Route::get('/indikator', [ZiAdminIndikatorController::class, 'index'])->name('indikator.index');
-        Route::get('/indikator/create', [ZiAdminIndikatorController::class, 'create'])->name('indikator.create');
-        Route::post('/indikator', [ZiAdminIndikatorController::class, 'store'])->name('indikator.store');
-        Route::get('/indikator/{indikator}/edit', [ZiAdminIndikatorController::class, 'edit'])->name('indikator.edit');
-        Route::put('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'update'])->name('indikator.update');
-        Route::delete('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'destroy'])->name('indikator.destroy');
+        /*
+        |--------------------------------------------------------------------------
+        | MASTER USERS
+        |--------------------------------------------------------------------------
+        */
 
-        // ===== MASTER USERS =====
-        Route::get('/users', [ZiAdminUserController::class, 'index'])->name('users.index');
-        Route::get('/users/create', [ZiAdminUserController::class, 'create'])->name('users.create');
-        Route::post('/users', [ZiAdminUserController::class, 'store'])->name('users.store');
+        Route::get('/users', [ZiAdminUserController::class, 'index'])
+            ->name('users.index');
 
-        // ===== MASTER UNIT =====
-        Route::get('/units', [ZiAdminUnitController::class, 'index'])->name('units.index');
-        Route::get('/units/create', [ZiAdminUnitController::class, 'create'])->name('units.create');
-        Route::post('/units', [ZiAdminUnitController::class, 'store'])->name('units.store');
+        Route::get('/users/create', [ZiAdminUserController::class, 'create'])
+            ->name('users.create');
+
+        Route::post('/users', [ZiAdminUserController::class, 'store'])
+            ->name('users.store');
+
+        /*
+        |--------------------------------------------------------------------------
+        | MASTER UNITS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/units', [ZiAdminUnitController::class, 'index'])
+            ->name('units.index');
+
+        Route::get('/units/create', [ZiAdminUnitController::class, 'create'])
+            ->name('units.create');
+
+        Route::post('/units', [ZiAdminUnitController::class, 'store'])
+            ->name('units.store');
     });

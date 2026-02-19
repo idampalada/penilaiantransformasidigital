@@ -69,17 +69,20 @@ if (in_array($roleId, [1, 3])) {
     // Role 2 (user biasa): tampil sesuai kondisi data
     foreach ($indikators as $it) {
         // Tahap 1 tampil jika sudah ada nilai
-        if (!is_null($it->penilaian_tahap_1)) {
+        if (!is_null($it->unit_penilaian->penilaian_tahap_1))
+ {
             $showTahap1 = true;
         }
         // File Bukti 2 muncul kalau tahap 1 sudah dinilai
-        if (!is_null($it->penilaian_tahap_1)) {
+        if (!is_null($it->unit_penilaian->penilaian_tahap_1))
+ {
             $showFileBukti2 = true;
         }
         // Tahap 2 tampil kalau sudah ada nilai tahap 2
-        if (!is_null($it->penilaian_tahap_2)) {
-            $showTahap2 = true;
-        }
+if (!is_null($it->unit_penilaian->penilaian_tahap_2)) {
+    $showTahap2 = true;
+}
+
     }
 }
 
@@ -108,9 +111,9 @@ foreach ($indikators as $it) {
         $kategoriTotals[$kat] = ['mandiri' => 0, 'tahap1' => 0, 'tahap2' => 0];
     }
 
-    $mandiri = floatval($it->penilaian_mandiri ?? 0);
-    $t1      = floatval($it->penilaian_tahap_1 ?? 0);
-    $t2      = floatval($it->penilaian_tahap_2 ?? 0);
+$mandiri = floatval($it->unit_penilaian->penilaian_mandiri ?? 0);
+$t1      = floatval($it->unit_penilaian->penilaian_tahap_1 ?? 0);
+$t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 
     $kategoriTotals[$kat]['mandiri'] += $mandiri;
     $kategoriTotals[$kat]['tahap1']  += $t1;
@@ -278,7 +281,8 @@ foreach ($indikators as $it) {
     <input type="number"
            name="penilaian_mandiri[{{ $item->id }}]"
            min="0" max="1" step="0.01"
-           value="{{ old('penilaian_mandiri.' . $item->id, $item->penilaian_mandiri) }}"
+           value="{{ old('penilaian_mandiri.' . $item->id, $item->unit_penilaian->penilaian_mandiri) }}"
+
            class="form-control input-sm"
            placeholder="0 - 1">
 </td>
@@ -289,7 +293,7 @@ foreach ($indikators as $it) {
         <input type="number"
                name="penilaian_tahap_1[{{ $item->id }}]"
                min="0" max="1" step="0.01"
-               value="{{ old('penilaian_tahap_1.' . $item->id, $item->penilaian_tahap_1) }}"
+               value="{{ old('penilaian_tahap_1.' . $item->id, $item->unit_penilaian->penilaian_tahap_1) }}"
                class="form-control input-sm"
                placeholder="0 - 1"
                @if($roleId == 2) disabled @endif>
@@ -300,7 +304,7 @@ foreach ($indikators as $it) {
                   class="form-control input-sm"
                   rows="2"
                   placeholder="Catatan Penilaian 1"
-                  @if($roleId == 2) disabled @endif>{{ old('note_penilaian_1.' . $item->id, $item->note_penilaian_1) }}</textarea>
+                  @if($roleId == 2) disabled @endif>{{ old('note_penilaian_1.' . $item->id, $item->unit_penilaian->note_penilaian_1) }}</textarea>
     </td>
 @endif
 
@@ -337,7 +341,7 @@ foreach ($indikators as $it) {
         <input type="number"
                name="penilaian_tahap_2[{{ $item->id }}]"
                min="0" max="1" step="0.01"
-               value="{{ old('penilaian_tahap_2.' . $item->id, $item->penilaian_tahap_2) }}"
+               value="{{ old('penilaian_tahap_2.' . $item->id, $item->unit_penilaian->penilaian_tahap_2) }}"
                class="form-control input-sm"
                placeholder="0 - 1"
                @if($roleId == 2) disabled @endif>
@@ -348,7 +352,7 @@ foreach ($indikators as $it) {
                   class="form-control input-sm"
                   rows="2"
                   placeholder="Catatan Penilaian 2"
-                  @if($roleId == 2) disabled @endif>{{ old('note_penilaian_2.' . $item->id, $item->note_penilaian_2) }}</textarea>
+                  @if($roleId == 2) disabled @endif>{{ old('note_penilaian_2.' . $item->id, $item->unit_penilaian->note_penilaian_2) }}</textarea>
     </td>
 @endif
 
