@@ -4,101 +4,124 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ZiIndikator;
+use App\Models\ZiBukti;
 use Illuminate\Support\Facades\Storage;
 
 class ZiBuktiController extends Controller
 {
     public function upload(Request $request)
-{
-    $tahun  = 2025;
-    $unitId = auth()->user()->unit_id ?? 1;
+    {
+        $user   = auth()->user();
+        $role   = $user->role->name ?? null;
+        $tahun  = 2025;
+        $unitId = $user->unit_id ?? 1;
 
-    // ===== FILE BUKTI 1 =====
-    if ($request->hasFile('file_bukti_1')) {
-        foreach ($request->file('file_bukti_1') as $indikatorId => $file) {
+        /*
+        |--------------------------------------------------------------------------
+        | HANDLE FILE UPLOAD
+        |--------------------------------------------------------------------------
+        */
 
-            $indikator = ZiIndikator::find($indikatorId);
-            if (!$indikator) continue;
+        $allFiles = $request->allFiles();
 
-            if ($indikator->file_bukti_1) {
-                Storage::delete($indikator->file_bukti_1);
+        if (!empty($allFiles)) {
+
+            foreach ($allFiles as $inputName => $indikatorFiles) {
+
+                foreach ($indikatorFiles as $indikatorId => $files) {
+
+                    if (!is_array($files)) {
+                        $files = [$files];
+                    }
+
+                    foreach ($files as $file) {
+
+                        if (!$file || !$file->isValid()) {
+                            continue;
+                        }
+
+                        $filename = time().'_'.$file->getClientOriginalName();
+
+$path = $file->storeAs(
+    "UNOR/Bina Marga",
+    $filename,
+    'public'
+);
+
+
+                        ZiBukti::create([
+                            'zi_indikator_id' => $indikatorId,
+                            'unit_id'         => $unitId,
+                            'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
+                            'file_name'       => $file->getClientOriginalName(),
+                            'file_path'       => $path,
+                            'tahun'           => $tahun,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE PENILAIAN MANDIRI (SEMUA USER BOLEH)
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($request->penilaian_mandiri ?? [] as $id => $nilai) {
+            ZiIndikator::where('id', $id)
+                ->update(['penilaian_mandiri' => $nilai]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE PENILAIAN TAHAP 1 & 2 (HANYA TIM PENILAI / SUPERADMIN)
+        |--------------------------------------------------------------------------
+        */
+
+        if (in_array($role, ['superadmin', 'timpenilai'])) {
+
+            foreach ($request->penilaian_tahap_1 ?? [] as $id => $nilai) {
+                ZiIndikator::where('id', $id)
+                    ->update(['penilaian_tahap_1' => $nilai]);
             }
 
-            $path = $file->storeAs(
-                "zi-bukti/{$tahun}/unor-{$unitId}",
-                $file->getClientOriginalName()
-            );
-
-            $indikator->update([
-                'file_bukti_1' => $path
-            ]);
-        }
-    }
-
-    // ===== FILE BUKTI 2 =====
-    if ($request->hasFile('file_bukti_2')) {
-        foreach ($request->file('file_bukti_2') as $indikatorId => $file) {
-
-            $indikator = ZiIndikator::find($indikatorId);
-            if (!$indikator) continue;
-
-            if ($indikator->file_bukti_2) {
-                Storage::delete($indikator->file_bukti_2);
+            foreach ($request->note_penilaian_1 ?? [] as $id => $note) {
+                ZiIndikator::where('id', $id)
+                    ->update(['note_penilaian_1' => $note]);
             }
 
-            $path = $file->storeAs(
-                "zi-bukti/{$tahun}/unor-{$unitId}",
-                $file->getClientOriginalName()
-            );
+            foreach ($request->penilaian_tahap_2 ?? [] as $id => $nilai) {
+                ZiIndikator::where('id', $id)
+                    ->update(['penilaian_tahap_2' => $nilai]);
+            }
 
-            $indikator->update([
-                'file_bukti_2' => $path
-            ]);
+            foreach ($request->note_penilaian_2 ?? [] as $id => $note) {
+                ZiIndikator::where('id', $id)
+                    ->update(['note_penilaian_2' => $note]);
+            }
+
         }
+
+        return back()->with('success', 'Data berhasil disimpan');
     }
 
-    // ================= PENILAIAN MANDIRI =================
-if ($request->has('penilaian_mandiri')) {
-    foreach ($request->penilaian_mandiri as $indikatorId => $nilai) {
-        ZiIndikator::where('id', $indikatorId)
-            ->update(['penilaian_mandiri' => $nilai]);
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE FILE
+    |--------------------------------------------------------------------------
+    */
+
+    public function delete($id)
+    {
+        $bukti = ZiBukti::findOrFail($id);
+
+        if ($bukti->file_path && Storage::disk('public')->exists($bukti->file_path)) {
+            Storage::disk('public')->delete($bukti->file_path);
+        }
+
+        $bukti->delete();
+
+        return back()->with('success', 'File berhasil dihapus');
     }
-}
-
-// ================= PENILAIAN TAHAP 1 =================
-if ($request->has('penilaian_tahap_1')) {
-    foreach ($request->penilaian_tahap_1 as $indikatorId => $nilai) {
-        ZiIndikator::where('id', $indikatorId)
-            ->update(['penilaian_tahap_1' => $nilai]);
-    }
-}
-
-// ================= NOTE PENILAIAN 1 =================
-if ($request->has('note_penilaian_1')) {
-    foreach ($request->note_penilaian_1 as $indikatorId => $note) {
-        ZiIndikator::where('id', $indikatorId)
-            ->update(['note_penilaian_1' => $note]);
-    }
-}
-
-// ================= PENILAIAN TAHAP 2 =================
-if ($request->has('penilaian_tahap_2')) {
-    foreach ($request->penilaian_tahap_2 as $indikatorId => $nilai) {
-        ZiIndikator::where('id', $indikatorId)
-            ->update(['penilaian_tahap_2' => $nilai]);
-    }
-}
-
-// ================= NOTE PENILAIAN 2 =================
-if ($request->has('note_penilaian_2')) {
-    foreach ($request->note_penilaian_2 as $indikatorId => $note) {
-        ZiIndikator::where('id', $indikatorId)
-            ->update(['note_penilaian_2' => $note]);
-    }
-}
-
-
-    return back()->with('success', 'Data berhasil disimpan');
-}
-
 }

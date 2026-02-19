@@ -27,4 +27,10 @@ class ZiIndikator extends Model
     'note_penilaian_2',
         'is_active',
     ];
+
+    public function bukti()
+{
+    return $this->hasMany(\App\Models\ZiBukti::class, 'zi_indikator_id');
+}
+
 }

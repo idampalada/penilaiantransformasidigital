@@ -14,4 +14,9 @@ class ZiBukti extends Model
         'file_path',
         'tahun',
     ];
+    public function indikator()
+{
+    return $this->belongsTo(\App\Models\ZiIndikator::class, 'zi_indikator_id');
+}
+
 }

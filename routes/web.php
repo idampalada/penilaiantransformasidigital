@@ -34,6 +34,12 @@ Route::prefix('unor')
         // Upload bukti oleh UNOR
         Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
             ->name('zi.bukti.upload');
+
+                        // DELETE bukti
+Route::delete('/zi/bukti/{id}', [ZiBuktiController::class, 'delete'])
+    ->whereNumber('id')
+    ->name('zi.bukti.delete');
+
     });
 
 /*

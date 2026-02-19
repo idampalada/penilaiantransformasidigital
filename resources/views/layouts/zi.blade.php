@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>e-Monitoring Reformasi Birokrasi</title>
+    <title>Penilaian Transformasi Digital</title>
 
     {{-- BOOTSTRAP 3 --}}
     <link rel="stylesheet"
