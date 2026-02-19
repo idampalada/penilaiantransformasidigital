@@ -5,171 +5,195 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ZiIndikator;
 use App\Models\ZiBukti;
-use Illuminate\Support\Facades\Storage;
 use App\Models\ZiPenilaian;
-
+use Illuminate\Support\Facades\Storage;
 
 class ZiBuktiController extends Controller
 {
     public function upload(Request $request)
-{
-    $user   = auth()->user();
-    $role   = $user->role->name ?? null;
-    $tahun  = 2025;
-    $unitId = $user->unit_id;
+    {
+        $user   = auth()->user();
+        $roleId = $user->role_id;
+        $unitId = optional($user->unit)->id;
 
-    /*
-    |--------------------------------------------------------------------------
-    | HANDLE FILE UPLOAD
-    |--------------------------------------------------------------------------
-    */
+        if (!$unitId) {
+            return back()->withErrors('User belum terhubung dengan unit.');
+        }
 
-    $allFiles = $request->allFiles();
+        /*
+|--------------------------------------------------------------------------
+| VALIDASI FILE (WAJIB PDF & MAX 25MB)
+|--------------------------------------------------------------------------
+*/
 
-    if (!empty($allFiles)) {
+$request->validate([
+    'file_bukti_1.*.*' => 'nullable|file|mimes:pdf|max:25600',
+    'file_bukti_2.*.*' => 'nullable|file|mimes:pdf|max:25600',
+], [
+    'file_bukti_1.*.*.mimes' => 'File Bukti 1 harus format PDF.',
+    'file_bukti_1.*.*.max'   => 'Ukuran File Bukti 1 maksimal 25MB.',
+    'file_bukti_2.*.*.mimes' => 'File Bukti 2 harus format PDF.',
+    'file_bukti_2.*.*.max'   => 'Ukuran File Bukti 2 maksimal 25MB.',
+]);
 
-        foreach ($allFiles as $inputName => $indikatorFiles) {
 
-            foreach ($indikatorFiles as $indikatorId => $files) {
+        /*
+        |--------------------------------------------------------------------------
+        | HANDLE FILE UPLOAD (ROLE 1 & 2 SAJA)
+        |--------------------------------------------------------------------------
+        */
 
-                if (!is_array($files)) {
-                    $files = [$files];
-                }
+        if (in_array($roleId, [1, 2])) {
 
-                foreach ($files as $file) {
+            foreach ($request->allFiles() as $inputName => $indikatorFiles) {
 
-                    if (!$file || !$file->isValid()) {
-                        continue;
+                foreach ($indikatorFiles as $indikatorId => $files) {
+
+                    if (!is_array($files)) {
+                        $files = [$files];
                     }
 
-                    $filename = time().'_'.$file->getClientOriginalName();
+                    foreach ($files as $file) {
 
-                    // Folder berdasarkan nama unit
-                    $unitFolder = $user->unit->nama;
+                        if (!$file || !$file->isValid()) {
+                            continue;
+                        }
 
-                    $path = $file->storeAs(
-                        "UNOR/{$unitFolder}",
-                        $filename,
-                        'public'
-                    );
+                        $filename   = time().'_'.$file->getClientOriginalName();
+                        $unitFolder = $user->unit->nama ?? 'UNKNOWN';
 
-                    ZiBukti::create([
-                        'zi_indikator_id' => $indikatorId,
-                        'unit_id'         => $unitId,
-                        'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
-                        'file_name'       => $file->getClientOriginalName(),
-                        'file_path'       => $path,
-                        'tahun'           => $tahun,
-                    ]);
+                        $path = $file->storeAs(
+                            "UNOR/{$unitFolder}",
+                            $filename,
+                            'public'
+                        );
+
+                        ZiBukti::create([
+                            'zi_indikator_id' => $indikatorId,
+                            'unit_id'         => $unitId,
+                            'user_id'         => $user->id, // T
+                            'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
+                            'file_name'       => $file->getClientOriginalName(),
+                            'file_path'       => $path,
+                        ]);
+                    }
                 }
             }
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE / CREATE PENILAIAN
+        |--------------------------------------------------------------------------
+        */
+
+        $allIndikatorIds = collect([
+            array_keys($request->penilaian_mandiri ?? []),
+            array_keys($request->penilaian_tahap_1 ?? []),
+            array_keys($request->penilaian_tahap_2 ?? []),
+            array_keys($request->note_penilaian_1 ?? []),
+            array_keys($request->note_penilaian_2 ?? []),
+        ])->flatten()->unique();
+
+        foreach ($allIndikatorIds as $indikatorId) {
+
+            $data = [];
+
+            /*
+            |--------------------------------------------------------------------------
+            | PENILAIAN MANDIRI (ROLE 1 & 2)
+            |--------------------------------------------------------------------------
+            */
+            if (in_array($roleId, [1, 2]) &&
+                array_key_exists($indikatorId, $request->penilaian_mandiri ?? [])) {
+
+                $value = $request->penilaian_mandiri[$indikatorId];
+                $data['penilaian_mandiri'] = $value === '' ? null : $value;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | PENILAIAN TAHAP 1 & 2 (ROLE 1 & 3)
+            |--------------------------------------------------------------------------
+            */
+            if (in_array($roleId, [1, 3])) {
+
+                if (array_key_exists($indikatorId, $request->penilaian_tahap_1 ?? [])) {
+                    $value = $request->penilaian_tahap_1[$indikatorId];
+                    $data['penilaian_tahap_1'] = $value === '' ? null : $value;
+                }
+
+                if (array_key_exists($indikatorId, $request->note_penilaian_1 ?? [])) {
+                    $value = $request->note_penilaian_1[$indikatorId];
+                    $data['note_penilaian_1'] = $value === '' ? null : $value;
+                }
+
+                if (array_key_exists($indikatorId, $request->penilaian_tahap_2 ?? [])) {
+                    $value = $request->penilaian_tahap_2[$indikatorId];
+                    $data['penilaian_tahap_2'] = $value === '' ? null : $value;
+                }
+
+                if (array_key_exists($indikatorId, $request->note_penilaian_2 ?? [])) {
+                    $value = $request->note_penilaian_2[$indikatorId];
+                    $data['note_penilaian_2'] = $value === '' ? null : $value;
+                }
+            }
+
+            if (!empty($data)) {
+                ZiPenilaian::updateOrCreate(
+                    [
+                        'indikator_id' => $indikatorId,
+                        'unit_id'      => $unitId,
+                    ],
+                    $data
+                );
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE OPSI NILAI (SUPERADMIN ONLY)
+        |--------------------------------------------------------------------------
+        */
+
+        if ($roleId == 1) {
+
+            foreach ($request->opsi_nilai ?? [] as $id => $opsi) {
+                ZiIndikator::where('id', $id)
+                    ->update([
+                        'opsi_nilai' => $opsi === '' ? null : $opsi
+                    ]);
+            }
+        }
+
+        return back()->with('success', 'Data berhasil disimpan');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | UPDATE / CREATE PENILAIAN (SEMUA USER)
-    |--------------------------------------------------------------------------
-    */
-
-    foreach ($request->penilaian_mandiri ?? [] as $indikatorId => $nilai) {
-
-        ZiPenilaian::updateOrCreate(
-            [
-                'indikator_id' => $indikatorId,
-                'unit_id'      => $unitId,
-            ],
-            [
-                'penilaian_mandiri' => $nilai,
-            ]
-        );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | TAHAP 1 & 2 (HANYA TIM PENILAI / SUPERADMIN)
-    |--------------------------------------------------------------------------
-    */
-
-    if (in_array($role, ['superadmin', 'timpenilai'])) {
-
-        foreach ($request->penilaian_tahap_1 ?? [] as $indikatorId => $nilai) {
-
-            ZiPenilaian::updateOrCreate(
-                [
-                    'indikator_id' => $indikatorId,
-                    'unit_id'      => $unitId,
-                ],
-                [
-                    'penilaian_tahap_1' => $nilai,
-                ]
-            );
-        }
-
-        foreach ($request->note_penilaian_1 ?? [] as $indikatorId => $note) {
-
-            ZiPenilaian::updateOrCreate(
-                [
-                    'indikator_id' => $indikatorId,
-                    'unit_id'      => $unitId,
-                ],
-                [
-                    'note_penilaian_1' => $note,
-                ]
-            );
-        }
-
-        foreach ($request->penilaian_tahap_2 ?? [] as $indikatorId => $nilai) {
-
-            ZiPenilaian::updateOrCreate(
-                [
-                    'indikator_id' => $indikatorId,
-                    'unit_id'      => $unitId,
-                ],
-                [
-                    'penilaian_tahap_2' => $nilai,
-                ]
-            );
-        }
-
-        foreach ($request->note_penilaian_2 ?? [] as $indikatorId => $note) {
-
-            ZiPenilaian::updateOrCreate(
-                [
-                    'indikator_id' => $indikatorId,
-                    'unit_id'      => $unitId,
-                ],
-                [
-                    'note_penilaian_2' => $note,
-                ]
-            );
-        }
-    }
-
-    return back()->with('success', 'Data berhasil disimpan');
-}
-
-    /*
-    |--------------------------------------------------------------------------
-    | DELETE FILE
+    | DELETE FILE (ROLE 1 & 2 SAJA)
     |--------------------------------------------------------------------------
     */
 
     public function delete($id)
-{
-    $user = auth()->user();
+    {
+        $user   = auth()->user();
+        $roleId = $user->role_id;
 
-    $bukti = ZiBukti::where('id', $id)
-                    ->where('unit_id', $user->unit_id)
-                    ->firstOrFail();
+        if (!in_array($roleId, [1, 2])) {
+            abort(403, 'Tidak diizinkan menghapus file.');
+        }
 
-    if ($bukti->file_path && Storage::disk('public')->exists($bukti->file_path)) {
-        Storage::disk('public')->delete($bukti->file_path);
+        $bukti = ZiBukti::where('id', $id)
+            ->where('unit_id', optional($user->unit)->id)
+            ->firstOrFail();
+
+        if ($bukti->file_path && Storage::disk('public')->exists($bukti->file_path)) {
+            Storage::disk('public')->delete($bukti->file_path);
+        }
+
+        $bukti->delete();
+
+        return back()->with('success', 'File berhasil dihapus');
     }
-
-    $bukti->delete();
-
-    return back()->with('success', 'File berhasil dihapus');
-}
-
 }

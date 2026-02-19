@@ -92,6 +92,10 @@ $extraColumns = 0;
 if ($showTahap1)     $extraColumns += 2; // Penilaian Tahap 1 + Note 1
 if ($showFileBukti2) $extraColumns += 1; // File Bukti 2
 if ($showTahap2)     $extraColumns += 2; // Penilaian Tahap 2 + Note 2
+
+if ($roleId == 1) {
+    $extraColumns += 1; // kolom Opsi Nilai
+}
 $totalColumns = $baseColumns + $extraColumns;
 @endphp
 
@@ -182,6 +186,11 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
     <th>Note Penilaian 2</th>
 @endif
 
+
+@if($roleId == 1)
+    <th>Opsi Nilai</th>
+@endif
+
 </tr>
 </thead>
 
@@ -225,6 +234,11 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
         </td>
         <td></td>
     @endif
+
+    @if($roleId == 1)
+    <td></td>
+@endif
+
 </tr>
 
 @php $currentKategori = $item->kategori; @endphp
@@ -251,21 +265,30 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 <td>{!! nl2br(e($row['penilaian'])) !!}</td>
 <td>{!! nl2br(e($row['bukti'])) !!}</td>
 
-{{-- FILE BUKTI 1 — semua role boleh upload --}}
+{{-- FILE BUKTI 1 — hanya role 2 yang boleh upload & hapus --}}
 <td>
-    <input type="file"
-           name="file_bukti_1[{{ $item->id }}][]"
-           accept="application/pdf"
-           multiple
-           class="form-control input-sm">
+<input type="file"
+       name="file_bukti_1[{{ $item->id }}][]"
+       accept="application/pdf"
+       multiple
+       class="form-control input-sm"
+       @if($roleId != 2 && $roleId != 1) disabled @endif>
+
+<small class="text-muted">
+    * Format wajib PDF, maksimal 25MB per file
+</small>
 
     @foreach($item->bukti->where('metode_index', 1) as $file)
         <div style="margin-top:4px; font-size:11px;">
             📄
-            <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank">
-                {{ $file->file_name }}
-            </a>
-            @if($roleId != 2)
+<a href="{{ asset('storage/' . $file->file_path) }}"
+   target="_blank"
+   title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
+    {{ $file->file_name }}
+</a>
+
+
+            @if($roleId == 2)
                 <button type="button"
                         class="btn btn-xs btn-danger"
                         onclick="deleteFile('{{ $file->id }}')">
@@ -276,27 +299,71 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
     @endforeach
 </td>
 
-{{-- PENILAIAN MANDIRI — semua role boleh isi --}}
+@php
+    $opsi = [];
+    if (!empty($item->opsi_nilai)) {
+        $opsi = array_map('trim', explode(',', $item->opsi_nilai));
+    }
+@endphp
+
+{{-- PENILAIAN MANDIRI — hanya role 2 yang boleh isi --}}
 <td>
+@if(count($opsi) > 0)
+    <select name="penilaian_mandiri[{{ $item->id }}]"
+            class="form-control input-sm"
+            @if($roleId == 3) disabled @endif>
+
+        <option value="">-- Pilih --</option>
+
+        @foreach($opsi as $nilai)
+            <option value="{{ $nilai }}"
+                {{ old('penilaian_mandiri.' . $item->id,
+                       $item->unit_penilaian->penilaian_mandiri) == $nilai ? 'selected' : '' }}>
+                {{ $nilai }}
+            </option>
+        @endforeach
+    </select>
+@else
     <input type="number"
            name="penilaian_mandiri[{{ $item->id }}]"
            min="0" max="1" step="0.01"
-           value="{{ old('penilaian_mandiri.' . $item->id, $item->unit_penilaian->penilaian_mandiri) }}"
-
+           value="{{ old('penilaian_mandiri.' . $item->id,
+                         $item->unit_penilaian->penilaian_mandiri) }}"
            class="form-control input-sm"
-           placeholder="0 - 1">
+           placeholder="0 - 1"
+           @if($roleId == 3) disabled @endif>
+@endif
 </td>
+
 
 {{-- TAHAP 1 — hanya non-role-2 boleh isi --}}
 @if($showTahap1)
     <td>
-        <input type="number"
-               name="penilaian_tahap_1[{{ $item->id }}]"
-               min="0" max="1" step="0.01"
-               value="{{ old('penilaian_tahap_1.' . $item->id, $item->unit_penilaian->penilaian_tahap_1) }}"
-               class="form-control input-sm"
-               placeholder="0 - 1"
-               @if($roleId == 2) disabled @endif>
+        @if(count($opsi) > 0)
+            <select name="penilaian_tahap_1[{{ $item->id }}]"
+                    class="form-control input-sm"
+                    @if($roleId == 2) disabled @endif>
+
+                <option value="">-- Pilih --</option>
+
+                @foreach($opsi as $nilai)
+                    <option value="{{ $nilai }}"
+                        {{ old('penilaian_tahap_1.' . $item->id,
+                               $item->unit_penilaian->penilaian_tahap_1) == $nilai ? 'selected' : '' }}>
+                        {{ $nilai }}
+                    </option>
+                @endforeach
+            </select>
+        @else
+            <input type="number"
+                   name="penilaian_tahap_1[{{ $item->id }}]"
+                   min="0" max="1" step="0.01"
+                   value="{{ old('penilaian_tahap_1.' . $item->id,
+                                 $item->unit_penilaian->penilaian_tahap_1) }}"
+                   class="form-control input-sm"
+                   placeholder="0 - 1"
+                   @if($roleId == 2) disabled @endif>
+        @endif
     </td>
 
     <td>
@@ -308,22 +375,31 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
     </td>
 @endif
 
-{{-- FILE BUKTI 2 — muncul jika penilaian_tahap_1 sudah diisi, semua role boleh upload --}}
+{{-- FILE BUKTI 2 — muncul jika penilaian_tahap_1 sudah diisi, hanya role 2 boleh upload & hapus--}}
 @if($showFileBukti2)
     <td>
-        <input type="file"
-               name="file_bukti_2[{{ $item->id }}][]"
-               accept="application/pdf"
-               multiple
-               class="form-control input-sm">
+<input type="file"
+       name="file_bukti_2[{{ $item->id }}][]"
+       accept="application/pdf"
+       multiple
+       class="form-control input-sm"
+       @if($roleId != 2 && $roleId != 1) disabled @endif>
+
+<small class="text-muted">
+    * Format wajib PDF, maksimal 25MB per file
+</small>
 
         @foreach($item->bukti->where('metode_index', 2) as $file)
             <div style="margin-top:4px; font-size:11px;">
                 📄
-                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank">
-                    {{ $file->file_name }}
-                </a>
-                @if($roleId != 2)
+<a href="{{ asset('storage/' . $file->file_path) }}"
+   target="_blank"
+   title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
+    {{ $file->file_name }}
+</a>
+
+
+                @if($roleId == 2)
                     <button type="button"
                             class="btn btn-xs btn-danger"
                             onclick="deleteFile('{{ $file->id }}')">
@@ -335,17 +411,37 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
     </td>
 @endif
 
+
 {{-- TAHAP 2 — hanya non-role-2 boleh isi, muncul jika sudah ada nilai tahap 2 --}}
 @if($showTahap2)
     <td>
-        <input type="number"
-               name="penilaian_tahap_2[{{ $item->id }}]"
-               min="0" max="1" step="0.01"
-               value="{{ old('penilaian_tahap_2.' . $item->id, $item->unit_penilaian->penilaian_tahap_2) }}"
-               class="form-control input-sm"
-               placeholder="0 - 1"
-               @if($roleId == 2) disabled @endif>
+        @if(count($opsi) > 0)
+            <select name="penilaian_tahap_2[{{ $item->id }}]"
+                    class="form-control input-sm"
+                    @if($roleId == 2) disabled @endif>
+
+                <option value="">-- Pilih --</option>
+
+                @foreach($opsi as $nilai)
+                    <option value="{{ $nilai }}"
+                        {{ old('penilaian_tahap_2.' . $item->id,
+                               $item->unit_penilaian->penilaian_tahap_2) == $nilai ? 'selected' : '' }}>
+                        {{ $nilai }}
+                    </option>
+                @endforeach
+            </select>
+        @else
+            <input type="number"
+                   name="penilaian_tahap_2[{{ $item->id }}]"
+                   min="0" max="1" step="0.01"
+                   value="{{ old('penilaian_tahap_2.' . $item->id,
+                                 $item->unit_penilaian->penilaian_tahap_2) }}"
+                   class="form-control input-sm"
+                   placeholder="0 - 1"
+                   @if($roleId == 2) disabled @endif>
+        @endif
     </td>
+
 
     <td>
         <textarea name="note_penilaian_2[{{ $item->id }}]"
@@ -354,6 +450,19 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
                   placeholder="Catatan Penilaian 2"
                   @if($roleId == 2) disabled @endif>{{ old('note_penilaian_2.' . $item->id, $item->unit_penilaian->note_penilaian_2) }}</textarea>
     </td>
+@endif
+
+
+@if($roleId == 1)
+<td>
+<input type="text"
+       name="opsi_nilai[{{ $item->id }}]"
+       value="{{ $item->opsi_nilai ?? '' }}"
+       class="form-control input-sm"
+       style="width:110px;"
+       placeholder="3,5,7,9">
+
+</td>
 @endif
 
 </tr>
@@ -389,6 +498,11 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
         </td>
         <td></td>
     @endif
+
+    @if($roleId == 1)
+    <td></td>
+@endif
+
 </tr>
 
 </tbody>
