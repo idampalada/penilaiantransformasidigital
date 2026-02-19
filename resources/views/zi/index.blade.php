@@ -130,9 +130,11 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 @endphp
 
 {{-- ================= FILTER KATEGORI ================= --}}
-<form action="{{ route('zi.bukti.upload') }}"
+<form id="zi-form"
+      action="{{ route('zi.bukti.upload') }}"
       method="POST"
       enctype="multipart/form-data">
+
 @csrf
 
 <div class="text-right" style="margin-bottom:15px;">
@@ -524,14 +526,5 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
     @method('DELETE')
 </form>
 
-<script>
-function deleteFile(id) {
-    if (confirm('Hapus file ini?')) {
-        let form = document.getElementById('global-delete-form');
-        form.action = '/unor/zi/bukti/' + id;
-        form.submit();
-    }
-}
-</script>
 
 @endsection
