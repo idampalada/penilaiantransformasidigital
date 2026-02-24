@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ZiBukti extends Model
+class UptBukti extends Model
 {
     protected $fillable = [
-        'zi_indikator_id',
+        'upt_indikator_id',
         'unit_id',
         'user_id',
         'metode_index',
@@ -17,7 +17,7 @@ class ZiBukti extends Model
     ];
     public function indikator()
 {
-    return $this->belongsTo(\App\Models\ZiIndikator::class, 'zi_indikator_id');
+    return $this->belongsTo(\App\Models\UptIndikator::class, 'upt_indikator_id');
 }
 public function user()
 {

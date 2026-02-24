@@ -2,5 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ZI STYLE */
-@import "./zi.css";
+/* UNOR STYLE */
+@import "./unor.css";
+@import "./unker.css";
+@import "./upt.css";

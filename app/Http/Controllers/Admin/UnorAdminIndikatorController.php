@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ZiIndikator;
+use App\Models\UnorIndikator;
 
-class ZiAdminIndikatorController extends Controller
+class UnorAdminIndikatorController extends Controller
 {
 public function index()
 {
-    $indikators = ZiIndikator::orderByRaw("
+    $indikators = UnorIndikator::orderByRaw("
         CASE kategori
             WHEN 'Proses' THEN 1
             WHEN 'Organisasi' THEN 2
@@ -22,13 +22,13 @@ public function index()
     ->orderBy('nomor')
     ->get();
 
-    return view('admin.zi.indikator.index', compact('indikators'));
+    return view('admin.unor.indikator.index', compact('indikators'));
 }
 
 
     public function create()
     {
-        return view('admin.zi.indikator.create');
+        return view('admin.unor.indikator.create');
     }
 
     public function store(Request $request)
@@ -44,22 +44,31 @@ public function index()
         'bukti_persyaratan' => 'required',
     ]);
 
-    ZiIndikator::create($validated);
+    UnorIndikator::create($validated);
 
-    return redirect('/admin/indikator')
-        ->with('success', 'Indikator berhasil ditambahkan');
+    return redirect()
+    ->route('admin.indikator.index')
+    ->with('success', 'Indikator berhasil ditambahkan');
 }
-public function edit(ZiIndikator $indikator)
+public function edit(UnorIndikator $indikator)
 {
-    return view('admin.zi.indikator.edit', compact('indikator'));
+    return view('admin.unor.indikator.edit', compact('indikator'));
 }
-public function update(Request $request, ZiIndikator $indikator)
+public function update(Request $request, UnorIndikator $indikator)
 {
     $indikator->update($request->all());
 
     return redirect()
         ->route('admin.indikator.index')
         ->with('success', 'Indikator berhasil diperbarui');
+}
+public function destroy($id)
+{
+    UnorIndikator::findOrFail($id)->delete();
+
+    return redirect()
+        ->route('admin.indikator.index')
+        ->with('success', 'Indikator berhasil dihapus');
 }
 
 

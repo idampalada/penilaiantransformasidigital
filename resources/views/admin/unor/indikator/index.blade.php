@@ -1,10 +1,10 @@
-@extends('layouts.zi')
+@extends('layouts.unor')
 
 @section('content')
 
-<h4>Master Indikator ZI</h4>
+<h4>Master Indikator UNOR</h4>
 
-<a href="/admin/indikator/create" class="btn btn-primary mb-3">
+<a href="/admin/unor/indikator/create" class="btn btn-primary mb-3">
     + Tambah Indikator
 </a>
 
@@ -14,7 +14,7 @@
     </div>
 @endif
 
-<table class="table zi-table table-bordered">
+<table class="table unor-table table-bordered">
     <thead>
         <tr>
             <th style="width:50px">No</th>
@@ -33,22 +33,33 @@
 
     {{-- HEADER KATEGORI --}}
     @if ($item->kategori !== $currentKategori)
-        <tr class="zi-group-header">
+        <tr class="unor-group-header">
             <td colspan="4">{{ strtoupper($item->kategori) }}</td>
         </tr>
         @php $currentKategori = $item->kategori; @endphp
     @endif
 
-<tr class="zi-group-content">
+<tr class="unor-group-content">
     <td class="text-center">{{ $item->nomor }}</td>
     <td>{{ $item->kriteria }}</td>
     <td>{{ $item->indikator }}</td>
     <td>{{ $item->komponen }}</td>
-    <td>
+    <td class="text-center">
         <a href="{{ route('admin.indikator.edit', $item->id) }}"
            class="btn btn-sm btn-warning">
             Edit
         </a>
+
+        <form action="{{ route('admin.indikator.destroy', $item->id) }}"
+              method="POST"
+              style="display:inline-block"
+              onsubmit="return confirm('Yakin mau hapus data ini?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger">
+                Delete
+            </button>
+        </form>
     </td>
 </tr>
 

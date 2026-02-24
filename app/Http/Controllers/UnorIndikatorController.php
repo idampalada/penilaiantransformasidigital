@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ZiIndikator;
-use App\Models\ZiPenilaian;
+use App\Models\UnorIndikator;
+use App\Models\UnorPenilaian;
 
-class ZiIndikatorController extends Controller
+class UnorIndikatorController extends Controller
 {
     public function index()
     {
         $user   = auth()->user();
         $unitId = $user->unit_id;
 
-        $indikators = ZiIndikator::with([
+        $indikators = UnorIndikator::with([
             'bukti' => function ($q) use ($unitId) {
                 $q->where('unit_id', $unitId);
             },
@@ -41,7 +41,7 @@ class ZiIndikatorController extends Controller
 
             $penilaian = $item->penilaians->first();
 
-            $item->unit_penilaian = $penilaian ?? new ZiPenilaian([
+            $item->unit_penilaian = $penilaian ?? new UnorPenilaian([
                 'indikator_id' => $item->id,
                 'unit_id'      => $unitId,
             ]);
@@ -118,6 +118,6 @@ class ZiIndikatorController extends Controller
             return $item;
         });
 
-        return view('zi.index', compact('indikators'));
+        return view('unor.index', compact('indikators'));
     }
 }

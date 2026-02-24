@@ -1,4 +1,4 @@
-@extends('layouts.zi')
+@extends('layouts.unor')
 
 @section('content')
 <h4><strong>Master Unit</strong></h4>

@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (filter) {
         filter.addEventListener("change", function () {
             var selected = this.value;
-            var headers = document.querySelectorAll(".unor-group-header");
-            var rows = document.querySelectorAll(".unor-row");
+            var headers = document.querySelectorAll(".unker-group-header");
+            var rows = document.querySelectorAll(".unker-row");
 
             if (selected === "all") {
                 headers.forEach((el) => (el.style.display = ""));
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.deleteFile = function (id) {
         if (confirm("Hapus file ini?")) {
             let form = document.getElementById("global-delete-form");
-            form.action = "/unor/unor/bukti/" + id;
+            form.action = "/unker/unker/bukti/" + id;
             form.submit();
         }
     };
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let formChanged = false;
     let autosaveInterval = 60000; // 60 detik
 
-    const form = document.getElementById("unor-form");
+    const form = document.getElementById("unker-form");
 
     if (!form) return;
 

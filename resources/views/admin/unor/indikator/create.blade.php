@@ -1,17 +1,17 @@
-@extends('layouts.zi')
+@extends('layouts.unor')
 
 @section('content')
 
 <div class="row">
     <div class="col-md-12">
 
-        <h4><strong>Tambah Indikator ZI</strong></h4>
+        <h4><strong>Tambah Indikator UNOR</strong></h4>
         <p class="text-muted">
             Admin menentukan struktur indikator (split / tidak split).
             UNOR hanya mengisi file & nilai.
         </p>
 
-        <form method="POST" action="/admin/indikator">
+        <form method="POST" action="{{ route('admin.indikator.store') }}">
             @csrf
 
             {{-- NO --}}
@@ -130,7 +130,7 @@
                 Simpan Indikator
             </button>
 
-            <a href="/admin/indikator" class="btn btn-secondary">
+            <a href="{{ route('admin.indikator.index') }}" class="btn btn-secondary">
                 Kembali
             </a>
 

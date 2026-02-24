@@ -1,4 +1,4 @@
-@extends('layouts.zi')
+@extends('layouts.unor')
 
 @section('content')
 <h4><strong>Manajemen User</strong></h4>

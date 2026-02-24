@@ -1,4 +1,4 @@
-@extends('layouts.zi')
+@extends('layouts.unor')
 
 @section('content')
 <div class="row">

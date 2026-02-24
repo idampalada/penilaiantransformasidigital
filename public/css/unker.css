@@ -6,14 +6,14 @@ body {
 /* ==========================
            TABLE GLOBAL
         ========================== */
-.unor-table {
+.unker-table {
     background: #fff;
     width: 100%;
     table-layout: fixed; /* KUNCI LAYOUT */
 }
 
-.unor-table th,
-.unor-table td {
+.unker-table th,
+.unker-table td {
     border: 1px solid #ccc !important;
     vertical-align: top !important;
     padding: 6px 8px;
@@ -24,7 +24,7 @@ body {
 /* ==========================
            TABLE HEADER
         ========================== */
-.unor-table thead th {
+.unker-table thead th {
     background: #003366;
     color: #fff;
     text-align: center;
@@ -35,13 +35,13 @@ body {
 /* ==========================
            INNER SPLIT TABLE
         ========================== */
-.unor-inner-table {
+.unker-inner-table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
 }
 
-.unor-inner-table td {
+.unker-inner-table td {
     border: 1px solid #bbb;
     padding: 6px;
     vertical-align: top;
@@ -51,14 +51,14 @@ body {
 }
 
 /* HILANGKAN DOUBLE BORDER */
-.unor-table td[colspan] {
+.unker-table td[colspan] {
     padding: 0 !important;
 }
 
 /* ==========================
            INPUT & FILE
         ========================== */
-.unor-input {
+.unker-input {
     width: 60px;
     height: 30px;
     text-align: center;
@@ -66,13 +66,13 @@ body {
     font-size: 12px;
 }
 
-.unor-file-input {
+.unker-file-input {
     width: 100%;
     font-size: 11px;
 }
 
 /* ================= GROUP HEADER ================= */
-.unor-group-header td {
+.unker-group-header td {
     background: #0099ff; /* biru tua */
     color: #fff;
     font-weight: bold;
@@ -80,14 +80,14 @@ body {
     font-size: 13px;
     padding: 8px;
 }
-.unor-total-kategori td {
+.unker-total-kategori td {
     background: #cceaff; /* biru muda */
     font-weight: bold;
     text-align: center;
     font-size: 13px;
 }
 
-.unor-grand-total td {
+.unker-grand-total td {
     background: #a7d3ff;
     font-weight: bold;
     text-align: center;
@@ -95,8 +95,8 @@ body {
     border-top: 3px solid #0066cc;
 }
 
-.unor-table td,
-.unor-table th {
+.unker-table td,
+.unker-table th {
     vertical-align: middle !important;
 }
 
@@ -108,7 +108,7 @@ body {
     overflow: auto;
 }
 
-.unor-table thead th {
+.unker-table thead th {
     position: sticky;
     top: 0;
     z-index: 20;
@@ -119,118 +119,118 @@ body {
 /* ==========================
            STICKY HEADER KATEGORI (FIX FINAL)
         ========================== */
-.unor-group-header {
+.unker-group-header {
     position: sticky;
     top: 49px; /* tinggi thead */
     z-index: 19;
 }
 
 /* ===============================
-   CUSTOM WIDTH PER KOLOM (UNOR)
+   CUSTOM WIDTH PER KOLOM (unker)
    =============================== */
 
 /* No */
-.unor-table th:nth-child(1),
-.unor-table td:nth-child(1) {
+.unker-table th:nth-child(1),
+.unker-table td:nth-child(1) {
     width: 49px;
     min-width: 49px;
     text-align: center;
 }
 
 /* Kriteria */
-.unor-table th:nth-child(2),
-.unor-table td:nth-child(2) {
+.unker-table th:nth-child(2),
+.unker-table td:nth-child(2) {
     width: 140px;
     min-width: 140px;
 }
 
 /* Indikator */
-.unor-table th:nth-child(3),
-.unor-table td:nth-child(3) {
+.unker-table th:nth-child(3),
+.unker-table td:nth-child(3) {
     width: 180px;
     min-width: 180px;
 }
 
 /* Komponen */
-.unor-table th:nth-child(4),
-.unor-table td:nth-child(4) {
+.unker-table th:nth-child(4),
+.unker-table td:nth-child(4) {
     width: 160px;
     min-width: 160px;
 }
 
 /* Metode Pengukuran */
-.unor-table th:nth-child(5),
-.unor-table td:nth-child(5) {
+.unker-table th:nth-child(5),
+.unker-table td:nth-child(5) {
     width: 220px;
     min-width: 220px;
 }
 
 /* Penilaian */
-.unor-table th:nth-child(6),
-.unor-table td:nth-child(6) {
+.unker-table th:nth-child(6),
+.unker-table td:nth-child(6) {
     width: 180px;
     min-width: 180px;
 }
 
 /* Bukti / Persyaratan */
-.unor-table th:nth-child(7),
-.unor-table td:nth-child(7) {
+.unker-table th:nth-child(7),
+.unker-table td:nth-child(7) {
     width: 200px;
     min-width: 200px;
 }
 
 /* File Bukti 1 */
-.unor-table th:nth-child(8),
-.unor-table td:nth-child(8) {
+.unker-table th:nth-child(8),
+.unker-table td:nth-child(8) {
     width: 220px;
     min-width: 220px;
 }
 
 /* Penilaian Mandiri */
-.unor-table th:nth-child(9),
-.unor-table td:nth-child(9) {
+.unker-table th:nth-child(9),
+.unker-table td:nth-child(9) {
     width: 78px;
     min-width: 120px;
 }
 
 /* Penilaian Tahap 1 */
-.unor-table th:nth-child(10),
-.unor-table td:nth-child(10) {
+.unker-table th:nth-child(10),
+.unker-table td:nth-child(10) {
     width: 78px;
     min-width: 120px;
 }
 
 /* Note Penilaian 1 */
-.unor-table th:nth-child(11),
-.unor-table td:nth-child(11) {
+.unker-table th:nth-child(11),
+.unker-table td:nth-child(11) {
     width: 200px;
     min-width: 200px;
 }
 
 /* File Bukti 2 */
-.unor-table th:nth-child(12),
-.unor-table td:nth-child(12) {
+.unker-table th:nth-child(12),
+.unker-table td:nth-child(12) {
     width: 220px;
     min-width: 220px;
 }
 
 /* Penilaian Tahap 2 */
-.unor-table th:nth-child(13),
-.unor-table td:nth-child(13) {
+.unker-table th:nth-child(13),
+.unker-table td:nth-child(13) {
     width: 78px;
     min-width: 120px;
 }
 
 /* Note Penilaian 2 */
-.unor-table th:nth-child(14),
-.unor-table td:nth-child(14) {
+.unker-table th:nth-child(14),
+.unker-table td:nth-child(14) {
     width: 200px;
     min-width: 200px;
 }
 
 /* Opsi Nilai */
-.unor-table th:nth-child(15),
-.unor-table td:nth-child(15) {
+.unker-table th:nth-child(15),
+.unker-table td:nth-child(15) {
     width: 120px;
     min-width: 120px;
 }

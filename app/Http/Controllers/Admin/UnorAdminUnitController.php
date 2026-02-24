@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 
-class ZiAdminUnitController extends Controller
+class UnorAdminUnitController extends Controller
 {
     public function index()
     {

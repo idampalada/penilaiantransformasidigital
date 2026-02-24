@@ -2,12 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ZiIndikatorController;
-use App\Http\Controllers\ZiBuktiController;
-use App\Http\Controllers\Admin\ZiAdminIndikatorController;
-use App\Http\Controllers\Admin\ZiAdminUserController;
-use App\Http\Controllers\Admin\ZiAdminUnitController;
-
+use App\Http\Controllers\UnorIndikatorController;
+use App\Http\Controllers\UnorBuktiController;
+use App\Http\Controllers\Admin\UnorAdminIndikatorController;
+use App\Http\Controllers\Admin\UnorAdminUserController;
+use App\Http\Controllers\Admin\UnorAdminUnitController;
+use App\Http\Controllers\UnkerIndikatorController;
+use App\Http\Controllers\UnkerBuktiController;
+use App\Http\Controllers\Admin\UnkerAdminIndikatorController;
+use App\Http\Controllers\UptIndikatorController;
+use App\Http\Controllers\UptBuktiController;
+use App\Http\Controllers\Admin\UptAdminIndikatorController;
 /*
 |--------------------------------------------------------------------------
 | ROOT
@@ -28,18 +33,67 @@ Route::prefix('unor')
     ->middleware(['auth', 'only.unor'])
     ->group(function () {
 
-        // Landing ZI
-        Route::get('/', [ZiIndikatorController::class, 'index'])
-            ->name('zi.index');
+        // Landing Unor
+        Route::get('/', [UnorIndikatorController::class, 'index'])
+            ->name('unor.index');
 
         // Upload bukti & simpan penilaian
-        Route::post('/zi/bukti/upload', [ZiBuktiController::class, 'upload'])
-            ->name('zi.bukti.upload');
+        Route::post('/unor/bukti/upload', [UnorBuktiController::class, 'upload'])
+            ->name('unor.bukti.upload');
 
         // Delete bukti (aman per unit)
-        Route::delete('/zi/bukti/{id}', [ZiBuktiController::class, 'delete'])
+        Route::delete('/unor/bukti/{id}', [UnorBuktiController::class, 'delete'])
             ->whereNumber('id')
-            ->name('zi.bukti.delete');
+            ->name('unor.bukti.delete');
+    });
+
+
+    /*
+|--------------------------------------------------------------------------
+| UNKER (USER / TIM PENILAI)
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('unker')
+    ->middleware(['auth', 'only.unker'])
+    ->group(function () {
+
+        // Landing Unker
+        Route::get('/', [UnkerIndikatorController::class, 'index'])
+            ->name('unker.index');
+
+        // Upload bukti & simpan penilaian
+        Route::post('/unker/bukti/upload', [UnkerBuktiController::class, 'upload'])
+            ->name('unker.bukti.upload');
+
+        // Delete bukti (aman per unit)
+        Route::delete('/unker/bukti/{id}', [UnkerBuktiController::class, 'delete'])
+            ->whereNumber('id')
+            ->name('unker.bukti.delete');
+    });
+
+    /*
+|--------------------------------------------------------------------------
+| UPT (USER / TIM PENILAI)
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('upt')
+    ->middleware(['auth', 'only.upt'])
+    ->group(function () {
+
+        // Landing Upt
+        Route::get('/', [UptIndikatorController::class, 'index'])
+            ->name('upt.index');
+
+        // Upload bukti & simpan penilaian
+        Route::post('/upt/bukti/upload', [UptBuktiController::class, 'upload'])
+            ->name('upt.bukti.upload');
+
+        // Delete bukti (aman per unit)
+        Route::delete('/upt/bukti/{id}', [UptBuktiController::class, 'delete'])
+            ->whereNumber('id')
+            ->name('upt.bukti.delete');
     });
 
 /*
@@ -78,28 +132,89 @@ Route::prefix('admin')
     ->group(function () {
 
         /*
-        |--------------------------------------------------------------------------
-        | MASTER INDIKATOR
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| MASTER INDIKATOR UNOR
+|--------------------------------------------------------------------------
+*/
 
-        Route::get('/indikator', [ZiAdminIndikatorController::class, 'index'])
-            ->name('indikator.index');
+Route::prefix('unor')->group(function () {
 
-        Route::get('/indikator/create', [ZiAdminIndikatorController::class, 'create'])
-            ->name('indikator.create');
+    Route::get('/indikator', [UnorAdminIndikatorController::class, 'index'])
+        ->name('indikator.index');
 
-        Route::post('/indikator', [ZiAdminIndikatorController::class, 'store'])
-            ->name('indikator.store');
+    Route::get('/indikator/create', [UnorAdminIndikatorController::class, 'create'])
+        ->name('indikator.create');
 
-        Route::get('/indikator/{indikator}/edit', [ZiAdminIndikatorController::class, 'edit'])
-            ->name('indikator.edit');
+    Route::post('/indikator', [UnorAdminIndikatorController::class, 'store'])
+        ->name('indikator.store');
 
-        Route::put('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'update'])
-            ->name('indikator.update');
+    Route::get('/indikator/{indikator}/edit', [UnorAdminIndikatorController::class, 'edit'])
+        ->name('indikator.edit');
 
-        Route::delete('/indikator/{indikator}', [ZiAdminIndikatorController::class, 'destroy'])
-            ->name('indikator.destroy');
+    Route::put('/indikator/{indikator}', [UnorAdminIndikatorController::class, 'update'])
+        ->name('indikator.update');
+
+    Route::delete('/indikator/{indikator}', [UnorAdminIndikatorController::class, 'destroy'])
+        ->name('indikator.destroy');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| MASTER INDIKATOR UNKER
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('unker')->group(function () {
+
+    Route::get('/indikator', [UnkerAdminIndikatorController::class, 'index'])
+        ->name('indikator.index');
+
+    Route::get('/indikator/create', [UnkerAdminIndikatorController::class, 'create'])
+        ->name('indikator.create');
+
+    Route::post('/indikator', [UnkerAdminIndikatorController::class, 'store'])
+        ->name('indikator.store');
+
+    Route::get('/indikator/{indikator}/edit', [UnkerAdminIndikatorController::class, 'edit'])
+        ->name('indikator.edit');
+
+    Route::put('/indikator/{indikator}', [UnkerAdminIndikatorController::class, 'update'])
+        ->name('indikator.update');
+
+    Route::delete('/indikator/{indikator}', [UnkerAdminIndikatorController::class, 'destroy'])
+        ->name('indikator.destroy');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| MASTER INDIKATOR UPT
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('upt')->group(function () {
+
+    Route::get('/indikator', [UptAdminIndikatorController::class, 'index'])
+        ->name('indikator.index');
+
+    Route::get('/indikator/create', [UptAdminIndikatorController::class, 'create'])
+        ->name('indikator.create');
+
+    Route::post('/indikator', [UptAdminIndikatorController::class, 'store'])
+        ->name('indikator.store');
+
+    Route::get('/indikator/{indikator}/edit', [UptAdminIndikatorController::class, 'edit'])
+        ->name('indikator.edit');
+
+    Route::put('/indikator/{indikator}', [UptAdminIndikatorController::class, 'update'])
+        ->name('indikator.update');
+
+    Route::delete('/indikator/{indikator}', [UptAdminIndikatorController::class, 'destroy'])
+        ->name('indikator.destroy');
+
+});
+
 
         /*
         |--------------------------------------------------------------------------
@@ -107,13 +222,13 @@ Route::prefix('admin')
         |--------------------------------------------------------------------------
         */
 
-        Route::get('/users', [ZiAdminUserController::class, 'index'])
+        Route::get('/users', [UnorAdminUserController::class, 'index'])
             ->name('users.index');
 
-        Route::get('/users/create', [ZiAdminUserController::class, 'create'])
+        Route::get('/users/create', [UnorAdminUserController::class, 'create'])
             ->name('users.create');
 
-        Route::post('/users', [ZiAdminUserController::class, 'store'])
+        Route::post('/users', [UnorAdminUserController::class, 'store'])
             ->name('users.store');
 
         /*
@@ -122,12 +237,12 @@ Route::prefix('admin')
         |--------------------------------------------------------------------------
         */
 
-        Route::get('/units', [ZiAdminUnitController::class, 'index'])
+        Route::get('/units', [UnorAdminUnitController::class, 'index'])
             ->name('units.index');
 
-        Route::get('/units/create', [ZiAdminUnitController::class, 'create'])
+        Route::get('/units/create', [UnorAdminUnitController::class, 'create'])
             ->name('units.create');
 
-        Route::post('/units', [ZiAdminUnitController::class, 'store'])
+        Route::post('/units', [UnorAdminUnitController::class, 'store'])
             ->name('units.store');
     });

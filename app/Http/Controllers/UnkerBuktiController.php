@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ZiIndikator;
-use App\Models\ZiBukti;
-use App\Models\ZiPenilaian;
+use App\Models\UnkerIndikator;
+use App\Models\UnkerBukti;
+use App\Models\UnkerPenilaian;
 use Illuminate\Support\Facades\Storage;
 
-class ZiBuktiController extends Controller
+class UnkerBuktiController extends Controller
 {
     public function upload(Request $request)
     {
@@ -63,13 +63,13 @@ $request->validate([
                         $unitFolder = $user->unit->nama ?? 'UNKNOWN';
 
                         $path = $file->storeAs(
-                            "UNOR/{$unitFolder}",
+                            "UNKER/{$unitFolder}",
                             $filename,
                             'public'
                         );
 
-                        ZiBukti::create([
-                            'zi_indikator_id' => $indikatorId,
+                        UnkerBukti::create([
+                            'unker_indikator_id' => $indikatorId,
                             'unit_id'         => $unitId,
                             'user_id'         => $user->id, // T
                             'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
@@ -140,7 +140,7 @@ $request->validate([
             }
 
             if (!empty($data)) {
-                ZiPenilaian::updateOrCreate(
+                UnkerPenilaian::updateOrCreate(
                     [
                         'indikator_id' => $indikatorId,
                         'unit_id'      => $unitId,
@@ -159,7 +159,7 @@ $request->validate([
         if ($roleId == 1) {
 
             foreach ($request->opsi_nilai ?? [] as $id => $opsi) {
-                ZiIndikator::where('id', $id)
+                UnkerIndikator::where('id', $id)
                     ->update([
                         'opsi_nilai' => $opsi === '' ? null : $opsi
                     ]);
@@ -184,7 +184,7 @@ $request->validate([
             abort(403, 'Tidak diizinkan menghapus file.');
         }
 
-        $bukti = ZiBukti::where('id', $id)
+        $bukti = UnkerBukti::where('id', $id)
             ->where('unit_id', optional($user->unit)->id)
             ->firstOrFail();
 

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
-class ZiIndikator extends Model
+class UnkerIndikator extends Model
 {
-    protected $table = 'zi_indikators';
+    protected $table = 'unker_indikators';
 
     protected $fillable = [
         'nomor',
@@ -24,12 +24,12 @@ class ZiIndikator extends Model
     // Relasi ke penilaian (multi-unit)
     public function penilaians()
     {
-        return $this->hasMany(ZiPenilaian::class, 'indikator_id');
+        return $this->hasMany(UnkerPenilaian::class, 'indikator_id');
     }
 
     // Relasi ke bukti (kalau masih dipakai)
     public function bukti()
     {
-        return $this->hasMany(\App\Models\ZiBukti::class, 'zi_indikator_id');
+        return $this->hasMany(\App\Models\UnkerBukti::class, 'unker_indikator_id');
     }
 }

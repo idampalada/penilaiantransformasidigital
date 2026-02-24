@@ -1,4 +1,4 @@
-@extends('layouts.zi')
+@extends('layouts.unor')
 
 @section('content')
 
@@ -130,8 +130,8 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 @endphp
 
 {{-- ================= FILTER KATEGORI ================= --}}
-<form id="zi-form"
-      action="{{ route('zi.bukti.upload') }}"
+<form id="unor-form"
+      action="{{ route('unor.bukti.upload') }}"
       method="POST"
       enctype="multipart/form-data">
 
@@ -160,7 +160,7 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 
 
 
-<table class="table table-bordered zi-table">
+<table class="table table-bordered unor-table">
 
 <thead>
 <tr>
@@ -206,12 +206,12 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 
 @php $kat = strtoupper($item->kategori); @endphp
 
-<tr class="zi-group-header" data-kategori="{{ $kat }}">
+<tr class="unor-group-header" data-kategori="{{ $kat }}">
     <td colspan="{{ $totalColumns }}"><strong>{{ $kat }}</strong></td>
 </tr>
 
 {{-- TOTAL PER KATEGORI --}}
-<tr class="zi-total-kategori" data-kategori="{{ $kat }}">
+<tr class="unor-total-kategori" data-kategori="{{ $kat }}">
     <td colspan="8" class="text-right">
         <strong>TOTAL {{ $kat }}</strong>
     </td>
@@ -251,7 +251,7 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 @foreach ($item->groups as $group)
 @foreach ($group['rows'] as $idx => $row)
 
-<tr class="zi-row" data-kategori="{{ strtoupper($item->kategori) }}">
+<tr class="unor-row" data-kategori="{{ strtoupper($item->kategori) }}">
 
 @if ($firstItemRow)
     <td rowspan="{{ $item->total_rows }}">{{ $item->nomor }}</td>
@@ -475,7 +475,7 @@ $t2      = floatval($it->unit_penilaian->penilaian_tahap_2 ?? 0);
 @endforeach
 
 {{-- ================= GRAND TOTAL ================= --}}
-<tr class="zi-grand-total">
+<tr class="unor-grand-total">
     <td colspan="8" class="text-right">
         <strong>TOTAL KESELURUHAN</strong>
     </td>

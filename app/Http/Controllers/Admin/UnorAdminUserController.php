@@ -9,7 +9,7 @@ use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class ZiAdminUserController extends Controller
+class UnorAdminUserController extends Controller
 {
     public function index()
     {

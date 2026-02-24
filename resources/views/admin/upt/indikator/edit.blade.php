@@ -1,11 +1,11 @@
-@extends('layouts.zi')
+@extends('layouts.upt')
 
 @section('content')
 
 <div class="row">
     <div class="col-md-12">
 
-        <h4><strong>Edit Indikator ZI</strong></h4>
+        <h4><strong>Edit Indikator UPT</strong></h4>
         <p class="text-muted">
             Atur apakah indikator ini memiliki satu komponen atau multi-komponen.
         </p>

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ZiPenilaian extends Model
+class UptPenilaian extends Model
 {
-    protected $table = 'zi_penilaians';
+    protected $table = 'upt_penilaians';
 
     protected $fillable = [
         'indikator_id',
@@ -22,7 +22,7 @@ class ZiPenilaian extends Model
 
     public function indikator()
     {
-        return $this->belongsTo(ZiIndikator::class, 'indikator_id');
+        return $this->belongsTo(UptIndikator::class, 'indikator_id');
     }
 
     public function unit()
