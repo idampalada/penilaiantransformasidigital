@@ -27,8 +27,8 @@ class UnorBuktiController extends Controller
 */
 
 $request->validate([
-    'file_bukti_1.*.*' => 'nullable|file|mimes:pdf|max:25600',
-    'file_bukti_2.*.*' => 'nullable|file|mimes:pdf|max:25600',
+'file_bukti_1.*.*.*' => 'nullable|file|mimes:pdf|max:25600',
+'file_bukti_2.*.*.*' => 'nullable|file|mimes:pdf|max:25600',
 ], [
     'file_bukti_1.*.*.mimes' => 'File Bukti 1 harus format PDF.',
     'file_bukti_1.*.*.max'   => 'Ukuran File Bukti 1 maksimal 25MB.',
@@ -45,42 +45,46 @@ $request->validate([
 
         if (in_array($roleId, [1, 2])) {
 
-            foreach ($request->allFiles() as $inputName => $indikatorFiles) {
+            foreach (['file_bukti_1', 'file_bukti_2'] as $inputName) {
 
-                foreach ($indikatorFiles as $indikatorId => $files) {
+    $allFiles = $request->file($inputName);
 
-                    if (!is_array($files)) {
-                        $files = [$files];
-                    }
+    if (empty($allFiles)) {
+        continue;
+    }
 
-                    foreach ($files as $file) {
+    foreach ($allFiles as $indikatorId => $metodeFiles) {
 
-                        if (!$file || !$file->isValid()) {
-                            continue;
-                        }
+        foreach ($metodeFiles as $metodeIndex => $files) {
 
-                        $filename   = time().'_'.$file->getClientOriginalName();
-                        $unitFolder = $user->unit->nama ?? 'UNKNOWN';
+            foreach ($files as $file) {
 
-                        $path = $file->storeAs(
-                            "UNOR/{$unitFolder}",
-                            $filename,
-                            'public'
-                        );
-
-                        UnorBukti::create([
-                            'unor_indikator_id' => $indikatorId,
-                            'unit_id'         => $unitId,
-                            'user_id'         => $user->id, // T
-                            'metode_index'    => ($inputName === 'file_bukti_1') ? 1 : 2,
-                            'file_name'       => $file->getClientOriginalName(),
-                            'file_path'       => $path,
-                        ]);
-                    }
+                if (!$file || !$file->isValid()) {
+                    continue;
                 }
+
+                $filename   = time().'_'.$file->getClientOriginalName();
+                $unitFolder = $user->unit->nama ?? 'UNKNOWN';
+
+                $path = $file->storeAs(
+                    "UNOR/{$unitFolder}",
+                    $filename,
+                    'public'
+                );
+
+                UnorBukti::create([
+                    'unor_indikator_id' => $indikatorId,
+                    'unit_id'           => $unitId,
+                    'user_id'           => $user->id,
+                    'metode_index'      => $metodeIndex,
+                    'file_name'         => $file->getClientOriginalName(),
+                    'file_path'         => $path,
+                ]);
             }
         }
-
+    }
+}
+        }
         /*
         |--------------------------------------------------------------------------
         | UPDATE / CREATE PENILAIAN

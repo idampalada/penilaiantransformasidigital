@@ -229,13 +229,6 @@ body {
     min-width: 200px;
 }
 
-/* Opsi Nilai */
-.unker-table th:nth-child(15),
-.unker-table td:nth-child(15) {
-    width: 120px;
-    min-width: 120px;
-}
-
 /* ===================================
    HILANGKAN BORDER INPUT DALAM CELL
    =================================== */

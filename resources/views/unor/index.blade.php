@@ -198,10 +198,14 @@
                     @php $currentKategori = $item->kategori; @endphp
                 @endif
 
-                @php $firstItemRow = true; @endphp
+@php 
+    $firstItemRow = true; 
+    $globalIndex = 0; 
+@endphp
 
-                @foreach ($item->groups as $group)
-                    @foreach ($group['rows'] as $idx => $row)
+@foreach ($item->groups as $group)
+@foreach ($group['rows'] as $rowIndex => $row)
+@php $currentIndex = $globalIndex++; @endphp
 
                         {{-- Parse opsi nilai dari kolom penilaian --}}
                         @php
@@ -236,9 +240,9 @@
                                 <td rowspan="{{ $item->total_rows }}">{{ $item->indikator }}</td>
                             @endif
 
-                            @if ($idx === 0)
-                                <td rowspan="{{ $group['rowspan'] }}">{{ $group['komponen'] }}</td>
-                            @endif
+                            @if ($rowIndex === 0)
+    <td rowspan="{{ $group['rowspan'] }}">{{ $group['komponen'] }}</td>
+@endif
 
                             <td>{!! nl2br(e($row['metode'])) !!}</td>
                             <td>{!! nl2br(e($row['penilaian'])) !!}</td>
@@ -248,14 +252,14 @@
                             <td>
                                 <small class="upload-deadline">Upload Dokumen paling lambat 19 Desember</small>
                                 <input type="file"
-                                       name="file_bukti_1[{{ $item->id }}][]"
+                                       name="file_bukti_1[{{ $item->id }}][{{ $currentIndex }}][]"
                                        accept="application/pdf"
                                        multiple
                                        class="form-control input-sm"
                                        @if($roleId != 2 && $roleId != 1) disabled @endif>
                                 <small class="text-muted">* Format wajib PDF, maksimal 25MB per file</small>
 
-                                @foreach($item->bukti->where('metode_index', 1) as $file)
+                                @foreach($item->bukti->where('metode_index', $currentIndex) as $file)
                                     <div style="margin-top:4px; font-size:11px;">
                                         📄
                                         <a href="{{ asset('storage/' . $file->file_path) }}"
@@ -337,14 +341,14 @@
                             @if($showFileBukti2)
                                 <td>
                                     <input type="file"
-                                           name="file_bukti_2[{{ $item->id }}][]"
+                                           name="file_bukti_2[{{ $item->id }}][{{ $currentIndex }}][]"
                                            accept="application/pdf"
                                            multiple
                                            class="form-control input-sm"
                                            @if($roleId != 2 && $roleId != 1) disabled @endif>
                                     <small class="text-muted">* Format wajib PDF, maksimal 25MB per file</small>
 
-                                    @foreach($item->bukti->where('metode_index', 2) as $file)
+                                    @foreach($item->bukti->where('metode_index', $currentIndex) as $file)
                                         <div style="margin-top:4px; font-size:11px;">
                                             📄
                                             <a href="{{ asset('storage/' . $file->file_path) }}"
