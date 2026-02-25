@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.deleteFile = function (id) {
         if (confirm("Hapus file ini?")) {
             let form = document.getElementById("global-delete-form");
-            form.action = "/unker/unker/bukti/" + id;
+            form.action = "/unker/bukti/" + id; // ✅ sudah benar
             form.submit();
         }
     };

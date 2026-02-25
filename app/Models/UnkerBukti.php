@@ -11,6 +11,7 @@ class UnkerBukti extends Model
         'unit_id',
         'user_id',
         'metode_index',
+        'metode_type', 
         'file_name',
         'file_path',
         'tahun',

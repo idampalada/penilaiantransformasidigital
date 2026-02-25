@@ -11,6 +11,7 @@ class UnorPenilaian extends Model
     protected $fillable = [
         'indikator_id',
         'unit_id',
+        'metode_index',
         'file_bukti_1',
         'file_bukti_2',
         'penilaian_mandiri',

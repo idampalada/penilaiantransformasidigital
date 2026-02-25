@@ -33,20 +33,17 @@ Route::prefix('unor')
     ->middleware(['auth', 'only.unor'])
     ->group(function () {
 
-        // Landing Unor
         Route::get('/', [UnorIndikatorController::class, 'index'])
             ->name('unor.index');
 
-        // Upload bukti & simpan penilaian
-        Route::post('/unor/bukti/upload', [UnorBuktiController::class, 'upload'])
+        // ✅ HAPUS "unor" DI DEPAN
+        Route::post('/bukti/upload', [UnorBuktiController::class, 'upload'])
             ->name('unor.bukti.upload');
 
-        // Delete bukti (aman per unit)
-        Route::delete('/unor/bukti/{id}', [UnorBuktiController::class, 'delete'])
+        Route::delete('/bukti/{id}', [UnorBuktiController::class, 'delete'])
             ->whereNumber('id')
             ->name('unor.bukti.delete');
-    });
-
+});
 
     /*
 |--------------------------------------------------------------------------
@@ -62,14 +59,12 @@ Route::prefix('unker')
         Route::get('/', [UnkerIndikatorController::class, 'index'])
             ->name('unker.index');
 
-        // Upload bukti & simpan penilaian
-        Route::post('/unker/bukti/upload', [UnkerBuktiController::class, 'upload'])
-            ->name('unker.bukti.upload');
+        Route::post('/bukti/upload', [UnkerBuktiController::class, 'upload'])
+    ->name('unker.bukti.upload');
 
-        // Delete bukti (aman per unit)
-        Route::delete('/unker/bukti/{id}', [UnkerBuktiController::class, 'delete'])
-            ->whereNumber('id')
-            ->name('unker.bukti.delete');
+Route::delete('/bukti/{id}', [UnkerBuktiController::class, 'delete'])
+    ->whereNumber('id')
+    ->name('unker.bukti.delete');
     });
 
     /*
@@ -86,14 +81,12 @@ Route::prefix('upt')
         Route::get('/', [UptIndikatorController::class, 'index'])
             ->name('upt.index');
 
-        // Upload bukti & simpan penilaian
-        Route::post('/upt/bukti/upload', [UptBuktiController::class, 'upload'])
-            ->name('upt.bukti.upload');
+        Route::post('/bukti/upload', [UptBuktiController::class, 'upload'])
+    ->name('upt.bukti.upload');
 
-        // Delete bukti (aman per unit)
-        Route::delete('/upt/bukti/{id}', [UptBuktiController::class, 'delete'])
-            ->whereNumber('id')
-            ->name('upt.bukti.delete');
+Route::delete('/bukti/{id}', [UptBuktiController::class, 'delete'])
+    ->whereNumber('id')
+    ->name('upt.bukti.delete');
     });
 
 /*

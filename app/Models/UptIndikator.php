@@ -22,11 +22,11 @@ class UptIndikator extends Model
     ];
 
     // Relasi ke penilaian (multi-unit)
-    public function penilaians()
-    {
-        return $this->hasMany(UptPenilaian::class, 'indikator_id');
-    }
-
+public function penilaians()
+{
+    return $this->hasMany(UptPenilaian::class, 'indikator_id')
+        ->where('unit_id', auth()->user()->unit_id);
+}
     // Relasi ke bukti (kalau masih dipakai)
     public function bukti()
     {
