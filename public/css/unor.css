@@ -97,17 +97,16 @@ body {
 
 .unor-table td,
 .unor-table th {
-    vertical-align: middle !important;
+    vertical-align: top !important;
 }
-
 /* ==========================
            STICKY TABLE HEADER (FIX)
         ========================== */
-.table-responsive {
+.table-responsive-unor {
     max-height: 75vh;
-    overflow: auto;
+    overflow: auto; /* vertical + horizontal */
+    position: relative;
 }
-
 .unor-table thead th {
     position: sticky;
     top: 0;
@@ -182,21 +181,21 @@ body {
 /* File Bukti 1 */
 .unor-table th:nth-child(8),
 .unor-table td:nth-child(8) {
-    width: 220px;
-    min-width: 220px;
+    width: 240px;
+    min-width: 240px;
 }
 
 /* Penilaian Mandiri */
 .unor-table th:nth-child(9),
 .unor-table td:nth-child(9) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
 /* Penilaian Tahap 1 */
 .unor-table th:nth-child(10),
 .unor-table td:nth-child(10) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
@@ -217,7 +216,7 @@ body {
 /* Penilaian Tahap 2 */
 .unor-table th:nth-child(13),
 .unor-table td:nth-child(13) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
@@ -233,4 +232,37 @@ body {
 .unor-table td:nth-child(15) {
     width: 120px;
     min-width: 120px;
+}
+
+/* ===================================
+   HILANGKAN BORDER INPUT DALAM CELL
+   =================================== */
+
+/* Semua input, select, textarea dalam unor-table */
+.unor-table input,
+.unor-table select,
+.unor-table textarea {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent;
+}
+
+/* Supaya tetap terlihat rapi */
+.unor-table input:focus,
+.unor-table select:focus,
+.unor-table textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ===============================
+   Upload Deadline Style
+   =============================== */
+
+.upload-deadline {
+    display: block;
+    font-size: 11px;
+    color: #d9534f; /* merah elegan (bootstrap danger tone) */
+    margin-bottom: 3px;
+    font-weight: 500;
 }

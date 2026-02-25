@@ -150,25 +150,7 @@ $request->validate([
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE OPSI NILAI (SUPERADMIN ONLY)
-        |--------------------------------------------------------------------------
-        */
-
-        if ($roleId == 1) {
-
-            foreach ($request->opsi_nilai ?? [] as $id => $opsi) {
-                UnkerIndikator::where('id', $id)
-                    ->update([
-                        'opsi_nilai' => $opsi === '' ? null : $opsi
-                    ]);
-            }
-        }
-
-        return back()->with('success', 'Data berhasil disimpan');
     }
-
     /*
     |--------------------------------------------------------------------------
     | DELETE FILE (ROLE 1 & 2 SAJA)

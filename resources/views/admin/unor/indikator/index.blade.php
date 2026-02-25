@@ -45,12 +45,12 @@
     <td>{{ $item->indikator }}</td>
     <td>{{ $item->komponen }}</td>
     <td class="text-center">
-        <a href="{{ route('admin.indikator.edit', $item->id) }}"
+        <a href="{{ route('admin.unor.indikator.edit', $item->id) }}"
            class="btn btn-sm btn-warning">
             Edit
         </a>
 
-        <form action="{{ route('admin.indikator.destroy', $item->id) }}"
+        <form action="{{ route('admin.unor.indikator.destroy', $item->id) }}"
               method="POST"
               style="display:inline-block"
               onsubmit="return confirm('Yakin mau hapus data ini?')">

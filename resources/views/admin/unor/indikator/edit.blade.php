@@ -10,7 +10,7 @@
             Atur apakah indikator ini memiliki satu komponen atau multi-komponen.
         </p>
 
-        <form method="POST" action="{{ route('admin.indikator.update', $indikator->id) }}">
+        <form method="POST" action="{{ route('admin.unor.indikator.update', $indikator->id) }}">
             @csrf
             @method('PUT')
 
@@ -106,7 +106,7 @@
             </div>
 
             <button class="btn btn-primary">Simpan Perubahan</button>
-            <a href="{{ route('admin.indikator.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.unor.indikator.index') }}" class="btn btn-secondary">
                 Batal
             </a>
         </form>

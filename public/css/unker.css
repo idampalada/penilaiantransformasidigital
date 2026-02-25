@@ -97,15 +97,16 @@ body {
 
 .unker-table td,
 .unker-table th {
-    vertical-align: middle !important;
+    vertical-align: top !important;
 }
 
 /* ==========================
            STICKY TABLE HEADER (FIX)
         ========================== */
-.table-responsive {
+.table-responsive-unker {
     max-height: 75vh;
-    overflow: auto;
+    overflow: auto; /* vertical + horizontal */
+    position: relative;
 }
 
 .unker-table thead th {
@@ -182,21 +183,21 @@ body {
 /* File Bukti 1 */
 .unker-table th:nth-child(8),
 .unker-table td:nth-child(8) {
-    width: 220px;
-    min-width: 220px;
+    width: 240px;
+    min-width: 240px;
 }
 
 /* Penilaian Mandiri */
 .unker-table th:nth-child(9),
 .unker-table td:nth-child(9) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
 /* Penilaian Tahap 1 */
 .unker-table th:nth-child(10),
 .unker-table td:nth-child(10) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
@@ -217,7 +218,7 @@ body {
 /* Penilaian Tahap 2 */
 .unker-table th:nth-child(13),
 .unker-table td:nth-child(13) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
@@ -233,4 +234,37 @@ body {
 .unker-table td:nth-child(15) {
     width: 120px;
     min-width: 120px;
+}
+
+/* ===================================
+   HILANGKAN BORDER INPUT DALAM CELL
+   =================================== */
+
+/* Semua input, select, textarea dalam unker-table */
+.unker-table input,
+.unker-table select,
+.unker-table textarea {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent;
+}
+
+/* Supaya tetap terlihat rapi */
+.unker-table input:focus,
+.unker-table select:focus,
+.unker-table textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ===============================
+   Upload Deadline Style
+   =============================== */
+
+.upload-deadline {
+    display: block;
+    font-size: 11px;
+    color: #d9534f; /* merah elegan (bootstrap danger tone) */
+    margin-bottom: 3px;
+    font-weight: 500;
 }

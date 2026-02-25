@@ -97,15 +97,16 @@ body {
 
 .upt-table td,
 .upt-table th {
-    vertical-align: middle !important;
+    vertical-align: top !important;
 }
 
 /* ==========================
            STICKY TABLE HEADER (FIX)
         ========================== */
-.table-responsive {
+.table-responsive-upt {
     max-height: 75vh;
-    overflow: auto;
+    overflow: auto; /* vertical + horizontal */
+    position: relative;
 }
 
 .upt-table thead th {
@@ -182,21 +183,21 @@ body {
 /* File Bukti 1 */
 .upt-table th:nth-child(8),
 .upt-table td:nth-child(8) {
-    width: 220px;
-    min-width: 220px;
+    width: 240px;
+    min-width: 240px;
 }
 
 /* Penilaian Mandiri */
 .upt-table th:nth-child(9),
 .upt-table td:nth-child(9) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
 /* Penilaian Tahap 1 */
 .upt-table th:nth-child(10),
 .upt-table td:nth-child(10) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
@@ -217,7 +218,7 @@ body {
 /* Penilaian Tahap 2 */
 .upt-table th:nth-child(13),
 .upt-table td:nth-child(13) {
-    width: 78px;
+    width: 80px;
     min-width: 120px;
 }
 
@@ -233,4 +234,37 @@ body {
 .upt-table td:nth-child(15) {
     width: 120px;
     min-width: 120px;
+}
+
+/* ===================================
+   HILANGKAN BORDER INPUT DALAM CELL
+   =================================== */
+
+/* Semua input, select, textarea dalam upt-table */
+.upt-table input,
+.upt-table select,
+.upt-table textarea {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent;
+}
+
+/* Supaya tetap terlihat rapi */
+.upt-table input:focus,
+.upt-table select:focus,
+.upt-table textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ===============================
+   Upload Deadline Style
+   =============================== */
+
+.upload-deadline {
+    display: block;
+    font-size: 11px;
+    color: #d9534f; /* merah elegan (bootstrap danger tone) */
+    margin-bottom: 3px;
+    font-weight: 500;
 }

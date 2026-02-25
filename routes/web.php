@@ -131,89 +131,39 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        /*
-|--------------------------------------------------------------------------
-| MASTER INDIKATOR UNOR
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | MASTER INDIKATOR UNOR
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('unor')
+        ->name('unor.')
+        ->group(function () {
+            Route::resource('indikator', UnorAdminIndikatorController::class);
+        });
 
-Route::prefix('unor')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | MASTER INDIKATOR UNKER
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('unker')
+        ->name('unker.')
+        ->group(function () {
+            Route::resource('indikator', UnkerAdminIndikatorController::class);
+        });
 
-    Route::get('/indikator', [UnorAdminIndikatorController::class, 'index'])
-        ->name('indikator.index');
+    /*
+    |--------------------------------------------------------------------------
+    | MASTER INDIKATOR UPT
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('upt')
+        ->name('upt.')
+        ->group(function () {
+            Route::resource('indikator', UptAdminIndikatorController::class);
+        });
 
-    Route::get('/indikator/create', [UnorAdminIndikatorController::class, 'create'])
-        ->name('indikator.create');
-
-    Route::post('/indikator', [UnorAdminIndikatorController::class, 'store'])
-        ->name('indikator.store');
-
-    Route::get('/indikator/{indikator}/edit', [UnorAdminIndikatorController::class, 'edit'])
-        ->name('indikator.edit');
-
-    Route::put('/indikator/{indikator}', [UnorAdminIndikatorController::class, 'update'])
-        ->name('indikator.update');
-
-    Route::delete('/indikator/{indikator}', [UnorAdminIndikatorController::class, 'destroy'])
-        ->name('indikator.destroy');
-
-});
-
-/*
-|--------------------------------------------------------------------------
-| MASTER INDIKATOR UNKER
-|--------------------------------------------------------------------------
-*/
-
-Route::prefix('unker')->group(function () {
-
-    Route::get('/indikator', [UnkerAdminIndikatorController::class, 'index'])
-        ->name('indikator.index');
-
-    Route::get('/indikator/create', [UnkerAdminIndikatorController::class, 'create'])
-        ->name('indikator.create');
-
-    Route::post('/indikator', [UnkerAdminIndikatorController::class, 'store'])
-        ->name('indikator.store');
-
-    Route::get('/indikator/{indikator}/edit', [UnkerAdminIndikatorController::class, 'edit'])
-        ->name('indikator.edit');
-
-    Route::put('/indikator/{indikator}', [UnkerAdminIndikatorController::class, 'update'])
-        ->name('indikator.update');
-
-    Route::delete('/indikator/{indikator}', [UnkerAdminIndikatorController::class, 'destroy'])
-        ->name('indikator.destroy');
-
-});
-
-/*
-|--------------------------------------------------------------------------
-| MASTER INDIKATOR UPT
-|--------------------------------------------------------------------------
-*/
-
-Route::prefix('upt')->group(function () {
-
-    Route::get('/indikator', [UptAdminIndikatorController::class, 'index'])
-        ->name('indikator.index');
-
-    Route::get('/indikator/create', [UptAdminIndikatorController::class, 'create'])
-        ->name('indikator.create');
-
-    Route::post('/indikator', [UptAdminIndikatorController::class, 'store'])
-        ->name('indikator.store');
-
-    Route::get('/indikator/{indikator}/edit', [UptAdminIndikatorController::class, 'edit'])
-        ->name('indikator.edit');
-
-    Route::put('/indikator/{indikator}', [UptAdminIndikatorController::class, 'update'])
-        ->name('indikator.update');
-
-    Route::delete('/indikator/{indikator}', [UptAdminIndikatorController::class, 'destroy'])
-        ->name('indikator.destroy');
-
-});
 
 
         /*

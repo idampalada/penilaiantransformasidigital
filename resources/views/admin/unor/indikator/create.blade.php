@@ -11,7 +11,7 @@
             UNOR hanya mengisi file & nilai.
         </p>
 
-        <form method="POST" action="{{ route('admin.indikator.store') }}">
+        <form method="POST" action="{{ route('admin.unor.indikator.store') }}">
             @csrf
 
             {{-- NO --}}
@@ -130,7 +130,7 @@
                 Simpan Indikator
             </button>
 
-            <a href="{{ route('admin.indikator.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.unor.indikator.index') }}" class="btn btn-secondary">
                 Kembali
             </a>
 
