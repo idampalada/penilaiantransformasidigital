@@ -9,8 +9,32 @@ class UptIndikatorController extends Controller
 {
     public function index()
     {
-        $user   = auth()->user();
-        $unitId = $user->unit_id;
+$user = auth()->user();
+
+/*
+|--------------------------------------------------------------------------
+| Tentukan Unit Berdasarkan Role
+|--------------------------------------------------------------------------
+*/
+
+if ($user->role_id == 1) { // 1 = superadmin (sesuaikan kalau beda)
+
+    $unitId = request('unit_id'); // ambil dari dropdown
+
+    // kalau belum pilih unit, kosongkan dulu
+    if (!$unitId) {
+        $indikators = collect();
+$units = \App\Models\Unit::where('jenis', $user->unit->jenis)
+            ->orderBy('nama')
+            ->get();
+        return view('upt.index', compact('indikators', 'units'));
+    }
+
+} else {
+
+    // user biasa tetap pakai unit login
+    $unitId = $user->unit_id;
+}
 
         $indikators = UptIndikator::with([
             'bukti' => function ($q) use ($unitId) {
@@ -117,7 +141,9 @@ class UptIndikatorController extends Controller
 
             return $item;
         });
-
-        return view('upt.index', compact('indikators'));
+$units = \App\Models\Unit::where('jenis', $user->unit->jenis)
+            ->orderBy('nama')
+            ->get();
+return view('upt.index', compact('indikators', 'units'));
     }
 }

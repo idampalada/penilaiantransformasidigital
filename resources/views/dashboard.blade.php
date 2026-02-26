@@ -1,17 +1,37 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.unor')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+@section('content')
+
+<h3><strong>REAL TIME PENILAIAN</strong></h3>
+
+<form method="GET" style="margin-bottom:15px;">
+    <select name="jenis" onchange="this.form.submit()" class="form-control" style="width:200px;">
+<option value="">-- Semua --</option>
+<option value="UNOR" {{ ($jenis ?? '') == 'UNOR' ? 'selected' : '' }}>UNOR</option>
+<option value="UNKER" {{ ($jenis ?? '') == 'UNKER' ? 'selected' : '' }}>UNKER</option>
+<option value="UPT" {{ ($jenis ?? '') == 'UPT' ? 'selected' : '' }}>UPT</option>
+    </select>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Jenis Unit</th>
+            <th>Nama Unit</th>
+            <th>Total Penilaian</th>
+            <th>Total Bukti</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($data as $row)
+        <tr>
+            <td>{{ $row->jenis }}</td>
+            <td>{{ $row->nama }}</td>
+            <td>{{ $row->total_penilaian }}</td>
+            <td>{{ $row->total_bukti }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+@endsection

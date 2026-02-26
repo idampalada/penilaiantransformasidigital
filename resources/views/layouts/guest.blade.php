@@ -16,7 +16,7 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0"
-     style="background: url('{{ asset('login.jpg') }}') no-repeat center center fixed; background-size: cover;">
+     style="background: url('{{ asset('td.png') }}') no-repeat center center fixed; background-size: cover;">
 
             <!-- <div>
                 <a href="/">

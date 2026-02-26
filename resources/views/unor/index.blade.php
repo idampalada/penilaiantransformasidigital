@@ -115,7 +115,42 @@ foreach ($indikators as $it) {
     }
 }
 @endphp
+{{-- FILTER AREA --}}
+<div class="row" style="margin-bottom:15px;">
 
+    @if(auth()->user()->role_id == 1)
+
+        <div class="col-md-3">
+            <label style="font-weight:600;">PILIH UNIT</label>
+            <form method="GET">
+                <select name="unit_id"
+                        class="form-control input-sm"
+                        onchange="this.form.submit()">
+                    <option value="">-- Pilih Unit --</option>
+                    @foreach($units as $unit)
+                        <option value="{{ $unit->id }}"
+                            {{ request('unit_id') == $unit->id ? 'selected' : '' }}>
+                            {{ $unit->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
+
+    @endif
+
+    <div class="col-md-3">
+        <label style="font-weight:600;">KRITERIA KATEGORI</label>
+        <select id="filterKategori" class="form-control input-sm">
+            <option value="all">Keseluruhan</option>
+            <option value="PROSES">Proses</option>
+            <option value="ORGANISASI">Organisasi</option>
+            <option value="TEKNOLOGI">Teknologi</option>
+            <option value="DATA">Data</option>
+        </select>
+    </div>
+
+</div>
 {{-- ================= FORM UTAMA ================= --}}
 <form id="unor-form"
       action="{{ route('unor.bukti.upload') }}"
@@ -128,18 +163,6 @@ foreach ($indikators as $it) {
     </div>
 
     {{-- FILTER KATEGORI --}}
-    <div class="row" style="margin-bottom:15px;">
-        <div class="col-md-3">
-            <label style="font-weight:600; margin-bottom:5px;">KRITERIA KATEGORI</label>
-            <select id="filterKategori" class="form-control input-sm">
-                <option value="all">Keseluruhan</option>
-                <option value="PROSES">Proses</option>
-                <option value="ORGANISASI">Organisasi</option>
-                <option value="TEKNOLOGI">Teknologi</option>
-                <option value="DATA">Data</option>
-            </select>
-        </div>
-    </div>
 
     <div class="table-responsive-unor">
         <table class="table table-bordered unor-table">
