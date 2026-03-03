@@ -51,8 +51,7 @@ return [
     | the application so that it's available within Artisan commands.
     |
     */
-
-    'url' => env('APP_URL', 'http://localhost'),
+'url' => 'https://x5brvf53-8000.asse.devtunnels.ms',
 
     /*
     |--------------------------------------------------------------------------

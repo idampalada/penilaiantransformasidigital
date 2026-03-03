@@ -47,7 +47,7 @@ public function index()
     UptIndikator::create($validated);
 
     return redirect()
-    ->route('admin.indikator.index')
+    ->route('admin.upt.indikator.index')
     ->with('success', 'Indikator berhasil ditambahkan');
 }
 public function edit(UptIndikator $indikator)
@@ -59,7 +59,7 @@ public function update(Request $request, UptIndikator $indikator)
     $indikator->update($request->all());
 
     return redirect()
-        ->route('admin.indikator.index')
+        ->route('admin.upt.indikator.index')
         ->with('success', 'Indikator berhasil diperbarui');
 }
 public function destroy($id)
@@ -67,7 +67,7 @@ public function destroy($id)
     UptIndikator::findOrFail($id)->delete();
 
     return redirect()
-        ->route('admin.indikator.index')
+        ->route('admin.upt.indikator.index')
         ->with('success', 'Indikator berhasil dihapus');
 }
 

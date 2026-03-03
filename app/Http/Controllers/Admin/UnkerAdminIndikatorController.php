@@ -47,7 +47,7 @@ public function index()
     UnkerIndikator::create($validated);
 
     return redirect()
-    ->route('admin.indikator.index')
+    ->route('admin.unker.indikator.index')
     ->with('success', 'Indikator berhasil ditambahkan');
 }
 public function edit(UnkerIndikator $indikator)
@@ -59,7 +59,7 @@ public function update(Request $request, UnkerIndikator $indikator)
     $indikator->update($request->all());
 
     return redirect()
-        ->route('admin.indikator.index')
+        ->route('admin.unker.indikator.index')
         ->with('success', 'Indikator berhasil diperbarui');
 }
 public function destroy($id)
@@ -67,7 +67,7 @@ public function destroy($id)
     UnkerIndikator::findOrFail($id)->delete();
 
     return redirect()
-        ->route('admin.indikator.index')
+        ->route('admin.unker.indikator.index')
         ->with('success', 'Indikator berhasil dihapus');
 }
 

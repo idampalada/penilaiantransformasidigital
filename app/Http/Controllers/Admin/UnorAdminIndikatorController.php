@@ -47,7 +47,7 @@ public function index()
     UnorIndikator::create($validated);
 
     return redirect()
-    ->route('admin.indikator.index')
+    ->route('admin.unor.indikator.index')
     ->with('success', 'Indikator berhasil ditambahkan');
 }
 public function edit(UnorIndikator $indikator)
@@ -59,7 +59,7 @@ public function update(Request $request, UnorIndikator $indikator)
     $indikator->update($request->all());
 
     return redirect()
-        ->route('admin.indikator.index')
+        ->route('admin.unor.indikator.index')
         ->with('success', 'Indikator berhasil diperbarui');
 }
 public function destroy($id)
@@ -67,7 +67,7 @@ public function destroy($id)
     UnorIndikator::findOrFail($id)->delete();
 
     return redirect()
-        ->route('admin.indikator.index')
+        ->route('admin.unor.indikator.index')
         ->with('success', 'Indikator berhasil dihapus');
 }
 

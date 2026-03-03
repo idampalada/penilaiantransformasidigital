@@ -17,22 +17,23 @@ $user = auth()->user();
 |--------------------------------------------------------------------------
 */
 
-if ($user->role_id == 1) { // 1 = superadmin (sesuaikan kalau beda)
+if (in_array($user->role_id, [1, 3])) {
 
-    $unitId = request('unit_id'); // ambil dari dropdown
+    $unitId = request('unit_id');
 
-    // kalau belum pilih unit, kosongkan dulu
     if (!$unitId) {
+
         $indikators = collect();
-$units = \App\Models\Unit::where('jenis', $user->unit->jenis)
-            ->orderBy('nama')
-            ->get();
-        return view('unker.index', compact('indikators', 'units'));
+
+        $units = \App\Models\Unit::where('jenis', $user->unit->jenis)
+                    ->orderBy('nama')
+                    ->get();
+
+        return view('unor.index', compact('indikators', 'units'));
     }
 
 } else {
 
-    // user biasa tetap pakai unit login
     $unitId = $user->unit_id;
 }
 

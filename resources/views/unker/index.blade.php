@@ -118,7 +118,7 @@ foreach ($indikators as $it) {
 {{-- FILTER AREA --}}
 <div class="row" style="margin-bottom:15px;">
 
-    @if(auth()->user()->role_id == 1)
+    @if(in_array(auth()->user()->role_id, [1, 3]))
 
         <div class="col-md-3">
             <label style="font-weight:600;">PILIH UNIT</label>
@@ -505,9 +505,7 @@ foreach ($indikators as $it) {
         </table>
     </div>
 
-    <div class="text-right" style="margin-top:15px;">
-        <button type="submit" class="btn btn-primary">Simpan</button>
-    </div>
+
 
 </form>
 
