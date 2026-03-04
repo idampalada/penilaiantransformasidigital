@@ -208,7 +208,7 @@
             </p>
 
             <!-- Zona Integritas Badge -->
-            <div class="zona-badge mt-10 bg-[#1e3a5f] text-white px-6 py-3 rounded-full w-fit flex items-center gap-3 text-sm font-medium">
+            <div class="zona-badge mt-10 bg-[#1e3a5f] text-white px-6 py-3 rounded-full w-full max-w-sm flex items-center gap-3 text-sm font-medium">
                 <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block"></span>
                 Zona Integritas · WBBM
             </div>

@@ -8,12 +8,18 @@ use Illuminate\Http\Request;
 
 class UnorAdminUnitController extends Controller
 {
-    public function index()
-    {
-        $units = Unit::orderBy('id')->get();
+    public function index(Request $request)
+{
+    $units = Unit::orderBy('id');
 
-        return view('admin.units.index', compact('units'));
+    if ($request->jenis) {
+        $units->where('jenis', $request->jenis);
     }
+
+    $units = $units->get();
+
+    return view('admin.units.index', compact('units'));
+}
 
     public function create()
     {

@@ -11,15 +11,22 @@ use Illuminate\Support\Facades\Hash;
 
 class UnorAdminUserController extends Controller
 {
-    public function index()
-    {
-        $users = User::with(['role', 'unit'])
-            ->orderBy('id')
-            ->get();
+public function index(Request $request)
+{
+    $users = User::with(['role', 'unit'])
+        ->orderBy('id');
 
-        return view('admin.users.index', compact('users'));
+    // filter role
+    if ($request->role) {
+        $users->whereHas('role', function ($q) use ($request) {
+            $q->where('name', $request->role);
+        });
     }
 
+    $users = $users->get();
+
+    return view('admin.users.index', compact('users'));
+}
 public function create()
 {
     $roles = Role::orderBy('name')->get();
