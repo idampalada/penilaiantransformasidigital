@@ -27,6 +27,14 @@
 
   <!-- Left panel -->
   <div class="left-panel">
+
+    <!-- Gambar background full cover -->
+    <img
+      src="{{ asset('pusdatin.jpeg') }}"
+      alt="PUSDATIN"
+      class="left-panel-img"
+    />
+
     <div class="logo-row">
       <img src="/favicon.ico" class="logo-favicon" alt="PUSDATIN Logo" onerror="this.style.display='none'" />
       <div class="logo-text">
