@@ -24,8 +24,7 @@ class UnorIndikator extends Model
     // Relasi ke penilaian (multi-unit)
 public function penilaians()
 {
-    return $this->hasMany(UnorPenilaian::class, 'indikator_id')
-        ->where('unit_id', auth()->user()->unit_id);
+    return $this->hasMany(UnorPenilaian::class, 'indikator_id');
 }
 
     // Relasi ke bukti (kalau masih dipakai)

@@ -98,8 +98,6 @@
 
     Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
 
         Route::get('/profile', [ProfileController::class, 'edit'])
             ->name('profile.edit');
@@ -189,3 +187,12 @@
             Route::post('/units', [UnorAdminUnitController::class, 'store'])
                 ->name('units.store');
         });
+
+                    /*
+            |--------------------------------------------------------------------------
+            | DASHBOARD PENILAIAN
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');

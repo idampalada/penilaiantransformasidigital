@@ -158,6 +158,55 @@
     color: var(--text-muted);
     font-size: 0.9rem;
 }
+
+/* POPUP NOTICE */
+.notice-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.notice-box{
+    background: white;
+    width: 420px;
+    max-width: 90%;
+    padding: 28px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.notice-box h3{
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.notice-box p{
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.notice-box button{
+    margin-top: 18px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.notice-box button:hover{
+    background: var(--navy-dark);
+}
 </style>
 
 <div class="rtp-wrapper">
@@ -206,4 +255,24 @@
 
 </div>
 
+<!-- POPUP NOTICE -->
+<div id="noticePopup" class="notice-overlay">
+    <div class="notice-box">
+        <h3>Pemberitahuan</h3>
+        <p>
+            Penilaian Transformasi Digital akan dilaksanakan pada 
+            <strong>19 Desember 2026</strong>. 
+            <br><br>
+            Setiap unit diharapkan untuk segera melengkapi seluruh indikator 
+            yang tersedia beserta bukti dukung yang diperlukan.
+        </p>
+
+        <button onclick="closeNotice()">Mengerti</button>
+    </div>
+</div>
+<script>
+function closeNotice(){
+    document.getElementById("noticePopup").style.display = "none";
+}
+</script>
 @endsection

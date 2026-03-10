@@ -76,6 +76,13 @@
             MASUK
         </button>
 
+        <!-- LINK DASHBOARD -->
+<div class="text-center mt-4">
+    <a href="/dashboard" class="text-sm text-[#1e3a5f] hover:text-[#f59e0b] transition-colors duration-200 font-medium">
+        Lihat Dashboard Penilaian
+    </a>
+</div>
+
     </form>
 
     <!-- CALL CENTER -->
@@ -115,7 +122,7 @@
         </div>
 
         <p class="text-sm text-[#c0c7d3] mt-6">
-            © 2026 <strong class="text-[#8a93a6]">Laravel</strong> — Kementerian Pekerjaan Umum
+            © 2026 <strong class="text-[#8a93a6]">Transformasi Digital</strong> — Kementerian Pekerjaan Umum
         </p>
     </div>
 

@@ -17,22 +17,24 @@ $user = auth()->user();
 |--------------------------------------------------------------------------
 */
 
-if (in_array($user->role_id, [1, 3])) {
+$roleName = $user->role->name ?? null;
 
+if($roleName == 'superadmin'){
+
+    // superadmin bebas pilih unit
     $unitId = request('unit_id');
 
-    if (!$unitId) {
+}elseif(str_contains($roleName,'timpenilai')){
 
-        $indikators = collect();
+    // tim penilai melihat unit yang dipilih
+    $unitId = request('unit_id');
 
-        $units = \App\Models\Unit::where('jenis', $user->unit->jenis)
-                    ->orderBy('nama')
-                    ->get();
+}else{
 
-        return view('unor.index', compact('indikators', 'units'));
+    // user biasa wajib punya unit
+    if(!$user->unit_id){
+        abort(403,'User harus memiliki unit.');
     }
-
-} else {
 
     $unitId = $user->unit_id;
 }
@@ -142,9 +144,9 @@ if (in_array($user->role_id, [1, 3])) {
 
             return $item;
         });
-$units = \App\Models\Unit::where('jenis', $user->unit->jenis)
-            ->orderBy('nama')
-            ->get();
+$units = \App\Models\Unit::where('jenis','UNKER')
+    ->orderBy('nama')
+    ->get();
 return view('unker.index', compact('indikators', 'units'));
     }
 }

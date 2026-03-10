@@ -14,7 +14,12 @@ class UptBuktiController extends Controller
 {
     $user   = auth()->user();
     $roleId = $user->role_id;
+$unitId = $request->input('unit_id');
+
+if (!$unitId) {
     $unitId = optional($user->unit)->id;
+}
+
 
     if (!$unitId) {
         return back()->withErrors('User belum terhubung dengan unit.');
@@ -56,7 +61,7 @@ class UptBuktiController extends Controller
                         }
 
                         $filename   = time().'_'.$file->getClientOriginalName();
-                        $unitFolder = $user->unit->nama ?? 'UNKNOWN';
+                        $unitFolder = \App\Models\Unit::find($unitId)->nama ?? 'UNKNOWN';
 
                         $path = $file->storeAs(
                             "UPT/{$unitFolder}",
@@ -79,7 +84,7 @@ class UptBuktiController extends Controller
         }
     }
 
-    /*
+/*
     |--------------------------------------------------------------------------
     | UPDATE / CREATE PENILAIAN (PER ROW)
     |--------------------------------------------------------------------------
@@ -105,7 +110,7 @@ class UptBuktiController extends Controller
                         $request->penilaian_mandiri[$indikatorId][$metodeIndex] ?? null;
                 }
 
-                if (in_array($roleId, [1, 3])) {
+                if ($user->role->name === 'superadmin' || str_contains($user->role->name,'timpenilai')) {
 
                     $data['penilaian_tahap_1'] =
                         $request->penilaian_tahap_1[$indikatorId][$metodeIndex] ?? null;
@@ -132,8 +137,9 @@ class UptBuktiController extends Controller
         }
     }
 
-    return redirect()->route('upt.index')
-        ->with('success', 'Data berhasil disimpan.');
+return redirect()->route('upt.index', [
+        'unit_id' => $unitId
+    ])->with('success', 'Data berhasil disimpan.');
 }
     /*
     |--------------------------------------------------------------------------

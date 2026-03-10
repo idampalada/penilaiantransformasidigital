@@ -32,12 +32,14 @@
 @php
 $color = '#6c757d';
 
-if($user->role->name == 'superadmin'){
+$roleName = $user->role->name ?? null;
+
+if($roleName == 'superadmin'){
     $color = '#dc3545'; // merah
-}elseif($user->role->name == 'timpenilai'){
-    $color = '#0d6efd'; // biru
-}elseif($user->role->name == 'user'){
+}elseif($roleName == 'user'){
     $color = '#198754'; // hijau
+}elseif(str_contains($roleName, 'timpenilai')){
+    $color = '#0d6efd'; // biru
 }
 @endphp
 

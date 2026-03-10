@@ -17,23 +17,29 @@ $user = auth()->user();
 |--------------------------------------------------------------------------
 */
 
-if (in_array($user->role_id, [1, 3])) {
+$roleName = $user->role->name ?? null;
+
+if($roleName === 'superadmin'){
 
     $unitId = request('unit_id');
 
-    if (!$unitId) {
+    if(!$unitId){
 
         $indikators = collect();
 
-        $units = \App\Models\Unit::where('jenis', $user->unit->jenis)
-                    ->orderBy('nama')
-                    ->get();
+        $units = \App\Models\Unit::orderBy('nama')->get();
 
-        return view('unor.index', compact('indikators', 'units'));
+        return view('upt.index', compact('indikators','units'));
     }
 
-} else {
+}elseif(str_contains($roleName,'timpenilai')){
 
+    // tim penilai melihat unit yang dipilih
+    $unitId = request('unit_id');
+
+}else{
+
+    // user biasa
     $unitId = $user->unit_id;
 }
 
@@ -142,9 +148,15 @@ if (in_array($user->role_id, [1, 3])) {
 
             return $item;
         });
-$units = \App\Models\Unit::where('jenis', $user->unit->jenis)
-            ->orderBy('nama')
-            ->get();
+if($user->unit){
+    $units = \App\Models\Unit::where('jenis',$user->unit->jenis)
+        ->orderBy('nama')
+        ->get();
+}else{
+$units = \App\Models\Unit::where('jenis','UPT')
+    ->orderBy('nama')
+    ->get();
+}
 return view('upt.index', compact('indikators', 'units'));
     }
 }

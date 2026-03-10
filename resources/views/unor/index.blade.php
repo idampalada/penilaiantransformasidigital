@@ -49,13 +49,31 @@
 {{-- ================= ROLE LOGIC ================= --}}
 @php
     $roleId = auth()->user()->role_id;
+$roleName = auth()->user()->role->name ?? null;
 
+$allowedKategori = null;
+
+if($roleName == 'timpenilaiproses'){
+    $allowedKategori = 'PROSES';
+}elseif($roleName == 'timpenilaiorganisasi'){
+    $allowedKategori = 'ORGANISASI';
+}elseif($roleName == 'timpenilaiteknologi'){
+    $allowedKategori = 'TEKNOLOGI';
+}elseif($roleName == 'timpenilaidata'){
+    $allowedKategori = 'DATA';
+}
+
+if($allowedKategori){
+    $indikators = $indikators->filter(function($item) use ($allowedKategori){
+        return strtoupper($item->kategori) == $allowedKategori;
+    });
+}
     $showTahap1     = false;
     $showFileBukti2 = false;
     $showTahap2     = false;
 
     // Role 1 dan 3: semua kolom always on
-    if (in_array($roleId, [1, 3])) {
+    if ($roleName === 'superadmin' || str_contains($roleName,'timpenilai')) {
         $showTahap1     = true;
         $showFileBukti2 = true;
         $showTahap2     = true;
@@ -118,7 +136,7 @@ foreach ($indikators as $it) {
 {{-- FILTER AREA --}}
 <div class="row" style="margin-bottom:15px;">
 
-    @if(in_array(auth()->user()->role_id, [1, 3]))
+@if($roleName === 'superadmin' || str_contains($roleName,'timpenilai'))
 
         <div class="col-md-3">
             <label style="font-weight:600;">PILIH UNIT</label>
@@ -139,16 +157,18 @@ foreach ($indikators as $it) {
 
     @endif
 
-    <div class="col-md-3">
-        <label style="font-weight:600;">KRITERIA KATEGORI</label>
-        <select id="filterKategori" class="form-control input-sm">
-            <option value="all">Keseluruhan</option>
-            <option value="PROSES">Proses</option>
-            <option value="ORGANISASI">Organisasi</option>
-            <option value="TEKNOLOGI">Teknologi</option>
-            <option value="DATA">Data</option>
-        </select>
-    </div>
+    @if(!str_contains(auth()->user()->role->name, 'timpenilai'))
+<div class="col-md-3">
+    <label style="font-weight:600;">KRITERIA KATEGORI</label>
+    <select id="filterKategori" class="form-control input-sm">
+        <option value="all">Keseluruhan</option>
+        <option value="PROSES">Proses</option>
+        <option value="ORGANISASI">Organisasi</option>
+        <option value="TEKNOLOGI">Teknologi</option>
+        <option value="DATA">Data</option>
+    </select>
+</div>
+@endif
 
 </div>
 {{-- ================= FORM UTAMA ================= --}}
@@ -156,7 +176,12 @@ foreach ($indikators as $it) {
       action="{{ route('unor.bukti.upload') }}"
       method="POST"
       enctype="multipart/form-data">
+
     @csrf
+
+    @if($roleName === 'superadmin' || str_contains($roleName,'timpenilai'))
+        <input type="hidden" name="unit_id" value="{{ request('unit_id') }}">
+    @endif
 
     <div class="text-right" style="margin-bottom:15px;">
         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -325,7 +350,7 @@ foreach ($indikators as $it) {
                                 @if(count($opsi) > 0)
                                     <select name="penilaian_mandiri[{{ $item->id }}][{{ $currentIndex }}]"
                                             class="form-control input-sm"
-                                            @if($roleId == 3) disabled @endif>
+                                            @if(str_contains($roleName,'timpenilai')) disabled @endif>
                                         <option value="">Nilai</option>
                                         @foreach($opsi as $opt)
          <option value="{{ $opt['nilai'] }}"
@@ -347,7 +372,7 @@ foreach ($indikators as $it) {
 ) }}"
                                            class="form-control input-sm"
                                            placeholder="0 - 1"
-                                           @if($roleId == 3) disabled @endif>
+                                           @if(str_contains($roleName,'timpenilai')) disabled @endif>
                                 @endif
                             </td>
 
