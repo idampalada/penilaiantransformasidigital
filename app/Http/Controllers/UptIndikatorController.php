@@ -18,20 +18,32 @@ $user = auth()->user();
 */
 
 $roleName = $user->role->name ?? null;
+$jenisUser = $user->unit->jenis ?? null;
 
 if($roleName === 'superadmin'){
 
     $unitId = request('unit_id');
 
+    // 🔒 FILTER UNIT BERDASARKAN JENIS USER
+    $units = \App\Models\Unit::where('jenis', $jenisUser)
+        ->orderBy('nama')
+        ->get();
+
     if(!$unitId){
 
         $indikators = collect();
 
-        $units = \App\Models\Unit::orderBy('nama')->get();
-
         return view('upt.index', compact('indikators','units'));
     }
 
+    // 🔒 VALIDASI AGAR TIDAK BISA AKSES JENIS LAIN
+    $allowedUnit = \App\Models\Unit::where('id', $unitId)
+        ->where('jenis', $jenisUser)
+        ->first();
+
+    if(!$allowedUnit){
+        abort(403, 'Tidak boleh akses unit ini');
+    }
 }elseif(str_contains($roleName,'timpenilai')){
 
     // tim penilai melihat unit yang dipilih
@@ -51,15 +63,17 @@ if($roleName === 'superadmin'){
                 $q->where('unit_id', $unitId);
             }
         ])
-        ->orderByRaw("
-            CASE kategori
-                WHEN 'Proses' THEN 1
-                WHEN 'Organisasi' THEN 2
-                WHEN 'Data' THEN 3
-                WHEN 'Teknologi' THEN 4
-                ELSE 5
-            END
-        ")
+                ->orderByRaw("
+    CASE kategori
+        WHEN 'Organisasi' THEN 1
+        WHEN 'Proses' THEN 2
+        WHEN 'Data' THEN 3
+        WHEN 'Teknologi' THEN 4
+        WHEN 'Aplikasi' THEN 5
+        WHEN 'Keamanan' THEN 6
+        ELSE 7
+    END
+")
         ->orderBy('nomor')
         ->get()
         ->map(function ($item) use ($unitId) {
@@ -148,14 +162,18 @@ if($roleName === 'superadmin'){
 
             return $item;
         });
-if($user->unit){
-    $units = \App\Models\Unit::where('jenis',$user->unit->jenis)
-        ->orderBy('nama')
-        ->get();
+if($roleName === 'superadmin'){
+    // sudah di-handle di atas, jangan override lagi
 }else{
-$units = \App\Models\Unit::where('jenis','UPT')
-    ->orderBy('nama')
-    ->get();
+    if($user->unit){
+        $units = \App\Models\Unit::where('jenis',$user->unit->jenis)
+            ->orderBy('nama')
+            ->get();
+    }else{
+        $units = \App\Models\Unit::where('jenis','UPT')
+            ->orderBy('nama')
+            ->get();
+    }
 }
 return view('upt.index', compact('indikators', 'units'));
     }

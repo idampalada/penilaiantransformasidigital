@@ -261,3 +261,50 @@ body {
     margin-bottom: 3px;
     font-weight: 500;
 }
+
+/* ===============================
+   STATIC NO & KRITERIA UNTUK UNKER
+   =============================== */
+/* ==========================
+   STICKY KOLOM NO & KRITERIA
+   ========================== */
+.unker-table th:nth-child(1),
+.unker-table td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+
+.unker-table th:nth-child(2),
+.unker-table td:nth-child(2) {
+    position: sticky;
+    left: 49px;
+    z-index: 10;
+}
+
+/* Header sticky z-index lebih tinggi */
+.unker-table thead th:nth-child(1),
+.unker-table thead th:nth-child(2) {
+    z-index: 30;
+}
+
+/* Background solid agar tidak tembus ke kolom belakang */
+.unker-table tbody td:nth-child(1),
+.unker-table tbody td:nth-child(2) {
+    background: #fff;
+}
+
+.unker-group-header td:nth-child(1),
+.unker-group-header td:nth-child(2) {
+    background: #0099ff !important;
+}
+
+.unker-total-kategori td:nth-child(1),
+.unker-total-kategori td:nth-child(2) {
+    background: #cceaff !important;
+}
+
+.unker-grand-total td:nth-child(1),
+.unker-grand-total td:nth-child(2) {
+    background: #a7d3ff !important;
+}

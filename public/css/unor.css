@@ -259,3 +259,50 @@ body {
     margin-bottom: 3px;
     font-weight: 500;
 }
+
+/* ===============================
+   STATIC NO & KRITERIA UNTUK UNOR
+   =============================== */
+/* ==========================
+   STICKY KOLOM NO & KRITERIA
+   ========================== */
+.unor-table th:nth-child(1),
+.unor-table td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+
+.unor-table th:nth-child(2),
+.unor-table td:nth-child(2) {
+    position: sticky;
+    left: 49px;
+    z-index: 10;
+}
+
+/* Header sticky z-index lebih tinggi */
+.unor-table thead th:nth-child(1),
+.unor-table thead th:nth-child(2) {
+    z-index: 30;
+}
+
+/* Background solid agar tidak tembus ke kolom belakang */
+.unor-table tbody td:nth-child(1),
+.unor-table tbody td:nth-child(2) {
+    background: #fff;
+}
+
+.unor-group-header td:nth-child(1),
+.unor-group-header td:nth-child(2) {
+    background: #0099ff !important;
+}
+
+.unor-total-kategori td:nth-child(1),
+.unor-total-kategori td:nth-child(2) {
+    background: #cceaff !important;
+}
+
+.unor-grand-total td:nth-child(1),
+.unor-grand-total td:nth-child(2) {
+    background: #a7d3ff !important;
+}

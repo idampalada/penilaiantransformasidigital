@@ -261,3 +261,50 @@ body {
     margin-bottom: 3px;
     font-weight: 500;
 }
+
+/* ===============================
+   STATIC NO & KRITERIA UNTUK UPT
+   =============================== */
+/* ==========================
+   STICKY KOLOM NO & KRITERIA
+   ========================== */
+.upt-table th:nth-child(1),
+.upt-table td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+
+.upt-table th:nth-child(2),
+.upt-table td:nth-child(2) {
+    position: sticky;
+    left: 49px;
+    z-index: 10;
+}
+
+/* Header sticky z-index lebih tinggi */
+.upt-table thead th:nth-child(1),
+.upt-table thead th:nth-child(2) {
+    z-index: 30;
+}
+
+/* Background solid agar tidak tembus ke kolom belakang */
+.upt-table tbody td:nth-child(1),
+.upt-table tbody td:nth-child(2) {
+    background: #fff;
+}
+
+.upt-group-header td:nth-child(1),
+.upt-group-header td:nth-child(2) {
+    background: #0099ff !important;
+}
+
+.upt-total-kategori td:nth-child(1),
+.upt-total-kategori td:nth-child(2) {
+    background: #cceaff !important;
+}
+
+.upt-grand-total td:nth-child(1),
+.upt-grand-total td:nth-child(2) {
+    background: #a7d3ff !important;
+}

@@ -31,10 +31,12 @@
         <option value="Proses">Proses</option>
         <option value="Data">Data</option>
         <option value="Teknologi">Teknologi</option>
+        <option value="Aplikasi">Aplikasi</option>
+<option value="Keamanan">Keamanan</option>
     </select>
 
     <small class="text-muted">
-        Digunakan untuk pengelompokan indikator (Organisasi / Proses / Data / Teknologi)
+        Digunakan untuk pengelompokan indikator (Organisasi / Proses / Data / Teknologi / Aplikasi / Keamanan)
     </small>
 </div>
 

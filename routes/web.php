@@ -196,3 +196,15 @@
 
             Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+
+        
+                    /*
+            |--------------------------------------------------------------------------
+            | PANDUAN SOP SUPERADMIN
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get('/panduansuperadmin', function () {
+    return view('panduansuperadmin');
+})->middleware(['auth','only.superadmin'])->name('panduansuperadmin');

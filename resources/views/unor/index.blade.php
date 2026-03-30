@@ -61,6 +61,10 @@ if($roleName == 'timpenilaiproses'){
     $allowedKategori = 'TEKNOLOGI';
 }elseif($roleName == 'timpenilaidata'){
     $allowedKategori = 'DATA';
+}elseif($roleName == 'timpenilaiaplikasi'){
+    $allowedKategori = 'APLIKASI';
+}elseif($roleName == 'timpenilaikeamanan'){
+    $allowedKategori = 'KEAMANAN';
 }
 
 if($allowedKategori){
@@ -166,6 +170,8 @@ foreach ($indikators as $it) {
         <option value="ORGANISASI">Organisasi</option>
         <option value="TEKNOLOGI">Teknologi</option>
         <option value="DATA">Data</option>
+        <option value="APLIKASI">Aplikasi</option>
+<option value="KEAMANAN">Keamanan</option>
     </select>
 </div>
 @endif

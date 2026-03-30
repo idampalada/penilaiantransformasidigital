@@ -11,12 +11,14 @@ class UptAdminIndikatorController extends Controller
 public function index()
 {
     $indikators = UptIndikator::orderByRaw("
-        CASE kategori
+            CASE kategori
             WHEN 'Proses' THEN 1
             WHEN 'Organisasi' THEN 2
             WHEN 'Data' THEN 3
             WHEN 'Teknologi' THEN 4
-            ELSE 5
+                WHEN 'Aplikasi' THEN 5
+    WHEN 'Keamanan' THEN 6
+    ELSE 7
         END
     ")
     ->orderBy('nomor')
@@ -35,7 +37,7 @@ public function index()
 {
     $validated = $request->validate([
         'nomor' => 'required|integer',
-        'kategori' => 'required|in:Organisasi,Proses,Data,Teknologi',
+        'kategori' => 'required|in:Organisasi,Proses,Data,Teknologi,Aplikasi,Keamanan',
         'kriteria' => 'required',
         'indikator' => 'required',
         'komponen' => 'required',

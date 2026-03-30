@@ -180,8 +180,8 @@
         <div class="flex items-center gap-4">
             <img src="/favicon.ico" class="w-12 h-12 object-contain">
             <div>
-                <p class="text-xs font-semibold text-[#1e3a5f] tracking-wider leading-tight">KEMENTERIAN</p>
-                <p class="text-xs font-semibold text-[#1e3a5f] tracking-wider leading-tight">PEKERJAAN UMUM</p>
+                <p class="text-s font-semibold text-[#1e3a5f] tracking-wider leading-tight">KEMENTERIAN</p>
+                <p class="text-s font-semibold text-[#1e3a5f] tracking-wider leading-tight">PEKERJAAN UMUM</p>
             </div>
         </div>
 
