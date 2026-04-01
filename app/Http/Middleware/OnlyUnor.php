@@ -17,24 +17,26 @@ public function handle(Request $request, Closure $next)
 
     $roleName = $user->role->name ?? null;
 
-    // SUPERADMIN boleh lewat
-    if ($roleName === 'superadmin') {
-        return $next($request);
-    }
-
-    // TIM PENILAI boleh tanpa unit
+    // =========================
+    // TIM PENILAI (bebas tanpa unit)
+    // =========================
     if (str_contains($roleName, 'timpenilai')) {
         return $next($request);
     }
 
-    // USER biasa wajib punya unit
+    // =========================
+    // SEMUA SELAIN TIM PENILAI WAJIB PUNYA UNIT
+    // (termasuk superadmin)
+    // =========================
     if (!$user->unit) {
         abort(403, 'User harus memiliki unit.');
     }
 
-    // hanya UNOR
+    // =========================
+    // HANYA UNOR YANG BOLEH AKSES
+    // =========================
     if ($user->unit->jenis !== 'UNOR') {
-        abort(403, 'Akses hanya untuk UNOR atau Super Admin');
+        abort(403, 'Akses hanya untuk unit jenis UNOR');
     }
 
     return $next($request);

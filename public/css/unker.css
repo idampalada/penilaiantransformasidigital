@@ -308,3 +308,38 @@ body {
 .unker-grand-total td:nth-child(2) {
     background: #a7d3ff !important;
 }
+
+/* ==========================
+   UNTUK HILANGKAN SUB ROW BORDER (UNKER)
+   ========================== */
+
+/* row pertama (yang ada isi) */
+.merge-cell {
+    background: #fff;
+}
+
+/* row lanjutan (kosong) */
+.merge-cell.empty {
+    border-top: none !important;
+}
+
+/* ini yang bikin menyatu TOTAL */
+.unker-table tr:not(:first-child) .merge-cell.empty {
+    border-top: none !important;
+}
+
+/* OPTIONAL: hilangkan garis antar row khusus kolom ini */
+.unker-table td.merge-cell.empty {
+    border-top: none !important;
+}
+
+/* ini kunci biar tidak keliatan garis putus */
+.unker-table td.merge-cell.empty::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #fff; /* nutup garis */
+}

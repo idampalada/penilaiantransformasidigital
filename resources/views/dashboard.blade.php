@@ -317,12 +317,38 @@
 }
 .rtp-btn-login:hover  { background: var(--navy-dark); }
 .rtp-btn-login:active { transform: scale(0.97); }
+
+/* ── Dashboard Button ── */
+.rtp-btn-dashboard {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #ffffff;
+    background: linear-gradient(135deg, #1E3A5F, #2c5c8a);
+    border-radius: 8px;
+    padding: 9px 18px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
+    transition: transform 0.15s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+.rtp-btn-dashboard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(30, 58, 95, 0.32);
+    color: #ffffff;
+    text-decoration: none;
+}
+.rtp-btn-dashboard:active { transform: scale(0.97); }
 </style>
 
 <div class="rtp-wrapper">
 
     <!-- Top: Logo -->
-<div style="display:flex; align-items:center; gap:14px; margin-top:20px; margin-bottom:20px;">
+    <div style="display:flex; align-items:center; gap:14px; margin-top:20px; margin-bottom:20px;">
         <img src="/favicon.ico" style="width:48px; height:48px; object-fit:contain;">
         <div>
             <p style="margin:0; font-size:1.28rem; font-weight:700; color:#1E3A5F; letter-spacing:0.1em; line-height:1.4;">KEMENTERIAN</p>
@@ -330,9 +356,35 @@
         </div>
     </div>
 
+    <!-- Baris: Heading | Dashboard + Filter + Logout (semua satu baris) -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h3 class="rtp-heading" style="margin-bottom:0;">Real Time Penilaian Transformasi Digital</h3>
-        <div style="display:flex; align-items:center; gap:12px;">
+
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+
+            @auth
+                @php
+                    $unitJenis = auth()->user()->unit->jenis ?? null;
+                    $dashUrl = match($unitJenis) {
+                        'UNOR'  => '/unor',
+                        'UNKER' => '/unker',
+                        'UPT'   => '/upt',
+                        default => null
+                    };
+                    $dashLabel = match($unitJenis) {
+                        'UNOR'  => 'Dashboard Unit Organisasi',
+                        'UNKER' => 'Dashboard Unit Kerja',
+                        'UPT'   => 'Dashboard Unit Pelaksana Teknis',
+                        default => null
+                    };
+                @endphp
+                @if($dashUrl)
+                    <a href="{{ $dashUrl }}" class="rtp-btn-dashboard">
+                        🚀 {{ $dashLabel }}
+                    </a>
+                @endif
+            @endauth
+
             <form method="GET" class="rtp-filter" style="margin-bottom:0;">
                 <select name="jenis" onchange="this.form.submit()" class="rtp-select">
                     <option value="">-- Semua --</option>
@@ -341,7 +393,16 @@
                     <option value="UPT"   {{ ($jenis ?? '') == 'UPT'   ? 'selected' : '' }}>UNIT PELAKSANA TEKNIS</option>
                 </select>
             </form>
-            <a href="/login" class="rtp-btn-login">Login</a>
+
+            @auth
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="rtp-btn-login">Logout</button>
+                </form>
+            @else
+                <a href="/login" class="rtp-btn-login">Login</a>
+            @endauth
+
         </div>
     </div>
 

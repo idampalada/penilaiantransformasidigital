@@ -229,14 +229,23 @@
             <div>
                 <h3 class="title-font text-3xl font-bold text-[#1e3a5f]">2026</h3>
                 <p class="text-xs text-[#8a93a6] tracking-widest mt-1 uppercase">Tahun Aktif</p>
+                <!-- <p class="text-[#5a6478] text-sm leading-relaxed">
+    Tahun Aktif
+</p> -->
             </div>
             <div class="border-l border-[#d1d5db] pl-14">
                 <h3 class="title-font text-3xl font-bold text-[#1e3a5f]">WBBM</h3>
                 <p class="text-xs text-[#8a93a6] tracking-widest mt-1 uppercase">Target ZI</p>
+                <!-- <p class="text-[#5a6478] text-sm leading-relaxed">
+    Target ZI
+</p> -->
             </div>
             <div class="border-l border-[#d1d5db] pl-14">
                 <h3 class="title-font text-3xl font-bold text-[#1e3a5f]">PU</h3>
                 <p class="text-xs text-[#8a93a6] tracking-widest mt-1 uppercase">Kementerian</p>
+                <!-- <p class="text-[#5a6478] text-sm leading-relaxed">
+    Kementerian
+</p> -->
             </div>
         </div>
 

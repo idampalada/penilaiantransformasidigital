@@ -56,5 +56,6 @@ class Kernel extends HttpKernel
         'only.unor' => \App\Http\Middleware\OnlyUnor::class,
                 // ✅ CUSTOM MIDDLEWARE
         'only.unker' => \App\Http\Middleware\OnlyUnker::class,
+                'only.upt' => \App\Http\Middleware\OnlyUpt::class,
     ];
 }

@@ -164,14 +164,14 @@ foreach ($indikators as $it) {
 
     @if(!str_contains(auth()->user()->role->name,'timpenilai'))
 <div class="col-md-3">
-<label style="font-weight:600;">KRITERIA KATEGORI</label>
-<select id="filterKategori" class="form-control input-sm">
-    <option value="all">Keseluruhan</option>
-    <option value="PROSES">Proses</option>
-    <option value="ORGANISASI">Organisasi</option>
-        <option value="TEKNOLOGI">Teknologi</option>
-        <option value="DATA">Data</option>
+    <label style="font-weight:600;">KRITERIA KATEGORI</label>
+    <select id="filterKategori" class="form-control input-sm">
+        <option value="all">Keseluruhan</option>
+        <option value="ORGANISASI">Organisasi</option>
+        <option value="PROSES">Proses</option>
         <option value="APLIKASI">Aplikasi</option>
+        <option value="DATA">Data</option>
+        <option value="TEKNOLOGI">Teknologi</option>
 <option value="KEAMANAN">Keamanan</option>
     </select>
 </div>
@@ -197,7 +197,7 @@ foreach ($indikators as $it) {
     {{-- FILTER KATEGORI --}}
 
     <div class="table-responsive-upt">
-        <table class="table table-bordered upt-table">
+<table class="table table-bordered upt-table" style="border-collapse: separate !important;">
 
             <thead>
                 <tr>
@@ -303,11 +303,15 @@ foreach ($indikators as $it) {
 
                         <tr class="upt-row" data-kategori="{{ strtoupper($item->kategori) }}">
 
-                            @if ($firstItemRow)
-                                <td rowspan="{{ $item->total_rows }}">{{ $item->nomor }}</td>
-                                <td rowspan="{{ $item->total_rows }}">{{ $item->kriteria }}</td>
-                                <td rowspan="{{ $item->total_rows }}">{{ $item->indikator }}</td>
-                            @endif
+      @if ($firstItemRow)
+    <td class="merge-cell">{{ $item->nomor }}</td>
+    <td class="merge-cell">{{ $item->kriteria }}</td>
+    <td class="merge-cell">{{ $item->indikator }}</td>
+@else
+    <td class="merge-cell empty"></td>
+    <td class="merge-cell empty"></td>
+    <td class="merge-cell empty"></td>
+@endif
 
                             @if ($rowIndex === 0)
     <td rowspan="{{ $group['rowspan'] }}">{{ $group['komponen'] }}</td>

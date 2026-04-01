@@ -8,29 +8,37 @@ use Illuminate\Http\Request;
 class OnlyUpt
 {
     public function handle(Request $request, Closure $next)
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        // belum login
-        if (!$user) {
-            abort(403);
-        }
+    if (!$user) {
+        abort(403);
+    }
 
-        // ✅ SUPERADMIN BOLEH LEWAT
-        if ($user->role_id === 1) {
-            return $next($request);
-        }
+    $roleName = $user->role->name ?? null;
 
-        // user harus punya unit
-        if (!$user->unit) {
-            abort(403);
-        }
-
-        // hanya UPT
-        if ($user->unit->jenis !== 'UPT') {
-            abort(403, 'Akses hanya untuk UPT atau Super Admin');
-        }
-
+    // =========================
+    // TIM PENILAI (bebas tanpa unit)
+    // =========================
+    if (str_contains($roleName, 'timpenilai')) {
         return $next($request);
     }
+
+    // =========================
+    // SEMUA SELAIN TIM PENILAI WAJIB PUNYA UNIT
+    // (termasuk superadmin)
+    // =========================
+    if (!$user->unit) {
+        abort(403, 'User harus memiliki unit.');
+    }
+
+    // =========================
+    // HANYA UNOR YANG BOLEH AKSES
+    // =========================
+    if ($user->unit->jenis !== 'UNOR') {
+        abort(403, 'Akses hanya untuk unit jenis UNOR');
+    }
+
+    return $next($request);
+}
 }

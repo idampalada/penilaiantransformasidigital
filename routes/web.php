@@ -208,3 +208,26 @@
             Route::get('/panduansuperadmin', function () {
     return view('panduansuperadmin');
 })->middleware(['auth','only.superadmin'])->name('panduansuperadmin');
+        
+                    /*
+            |--------------------------------------------------------------------------
+            | PILIH UNIT UNTUK TIM PENILAI
+            |--------------------------------------------------------------------------
+            */
+
+
+
+Route::get('/unit', function () {
+    return view('pilihunit.index');
+})->middleware('auth');
+
+Route::get('/set-unit/{jenis}', function ($jenis) {
+
+    if (!in_array($jenis, ['unor', 'unker', 'upt'])) {
+        abort(404);
+    }
+
+    session(['selected_unit' => $jenis]);
+
+    return redirect('/' . $jenis);
+})->middleware('auth');
