@@ -29,6 +29,25 @@
     </div>
 </div>
 @endif
+@if(in_array(auth()->user()->role_id, [1,3,4,5,6]))
+
+<div class="row" style="margin-bottom:15px;">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs nav-tabs-custom">
+            <li class="{{ request()->is('unor*') ? 'active' : '' }}">
+                <a href="{{ url('/unor') }}">UNOR</a>
+            </li>
+            <li class="{{ request()->is('unker*') ? 'active' : '' }}">
+                <a href="{{ url('/unker') }}">UNKER</a>
+            </li>
+            <li class="{{ request()->is('upt*') ? 'active' : '' }}">
+                <a href="{{ url('/upt') }}">UPT</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@endif
 
 <hr>
 
@@ -234,15 +253,17 @@ foreach ($indikators as $it) {
                     @php $kat = strtoupper($item->kategori); @endphp
 
                     {{-- HEADER KATEGORI --}}
-                    <tr class="upt-group-header" data-kategori="{{ $kat }}">
-                        <td colspan="{{ $totalColumns }}"><strong>{{ $kat }}</strong></td>
-                    </tr>
+                                   <tr class="upt-group-header" data-kategori="{{ $kat }}">
+    <td colspan="2"><strong>{{ $kat }}</strong></td>
+    <td colspan="{{ $totalColumns - 2 }}"></td>
+</tr>
 
                     {{-- TOTAL PER KATEGORI --}}
                     <tr class="upt-total-kategori" data-kategori="{{ $kat }}">
-                        <td colspan="8" class="text-right">
-                            <strong>TOTAL {{ $kat }}</strong>
-                        </td>
+                        <td colspan="7"></td>
+<td class="text-center">
+    <strong>TOTAL {{ $kat }}</strong>
+</td>
                         <td>
                             <strong>{{ number_format($kategoriTotals[$kat]['mandiri'], 2) }}</strong>
                         </td>
