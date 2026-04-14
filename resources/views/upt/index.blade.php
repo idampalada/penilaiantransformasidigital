@@ -197,6 +197,11 @@ foreach ($indikators as $it) {
 @endif
 
 </div>
+@php
+    $now = now('Asia/Jakarta');
+    $deadline = \Carbon\Carbon::create($now->year, 12, 9, 23, 59, 59, 'Asia/Jakarta');
+    $isExpired = $now->gt($deadline);
+@endphp
 {{-- ================= FORM UTAMA ================= --}}
 <form id="upt-form"
       action="{{ route('upt.bukti.upload') }}"
@@ -346,11 +351,12 @@ foreach ($indikators as $it) {
                             <td>
                                 <small class="upload-deadline">Upload Dokumen paling lambat 19 Desember</small>
                                 <input type="file"
-                                       name="file_bukti_1[{{ $item->id }}][{{ $currentIndex }}][]"
-                                       accept="application/pdf"
-                                       multiple
-                                       class="form-control input-sm"
-                                       @if($roleId != 2 && $roleId != 1) disabled @endif>
+       name="file_bukti_1[{{ $item->id }}][{{ $currentIndex }}][]"
+       accept="application/pdf"
+       multiple
+       class="form-control input-sm"
+       @if($roleId != 2 && $roleId != 1) disabled @endif
+       @if($isExpired) disabled @endif>
                                 <small class="text-muted">* Format wajib PDF, maksimal 25MB per file</small>
 
 @foreach(
