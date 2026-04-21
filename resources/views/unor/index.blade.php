@@ -164,8 +164,8 @@ foreach ($indikators as $it) {
             <label style="font-weight:600;">PILIH UNIT</label>
             <form method="GET">
                 <select name="unit_id"
-                        class="form-control input-sm"
-                        onchange="this.form.submit()">
+        class="form-control input-sm select2"
+        onchange="this.form.submit()">
                     <option value="">-- Pilih Unit --</option>
                     @foreach($units as $unit)
                         <option value="{{ $unit->id }}"
@@ -370,7 +370,7 @@ foreach ($indikators as $it) {
                                            title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
                                             {{ $file->file_name }}
                                         </a>
-                                        @if($roleId == 2)
+                                        @if(in_array($roleId, [1, 2]))
                                             <button type="button"
                                                     class="btn btn-xs btn-danger"
                                                     onclick="deleteFile('{{ $file->id }}')">
@@ -479,7 +479,7 @@ foreach ($indikators as $it) {
                                                title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
                                                 {{ $file->file_name }}
                                             </a>
-                                            @if($roleId == 2)
+                                        @if(in_array($roleId, [1, 2]))
                                                 <button type="button"
                                                         class="btn btn-xs btn-danger"
                                                         onclick="deleteFile('{{ $file->id }}')">

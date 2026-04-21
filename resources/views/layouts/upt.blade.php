@@ -16,6 +16,8 @@
 
     {{-- CSS --}}        
     <link rel="stylesheet" href="{{ asset('css/upt.css') }}">
+        {{-- ✅ SELECT2 CSS (FIXED, NO 404) --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 
     
@@ -25,7 +27,28 @@
 <div class="container-fluid">
     @yield('content')
 </div>
+{{-- ================= SCRIPT ================= --}}
 
+{{-- ✅ jQuery --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{{-- ✅ Select2 JS (FIXED, NO 404) --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+{{-- ✅ INIT --}}
+<script>
+$(document).ready(function () {
+    if ($.fn.select2) {
+        $('.select2').select2({
+            placeholder: "-- Pilih Unit --",
+            allowClear: true,
+            width: '100%'
+        });
+    } else {
+        console.error('Select2 gagal load');
+    }
+});
+</script>
 {{-- SCRIPT --}}   
 <script src="{{ asset('js/upt.js') }}"></script>
 

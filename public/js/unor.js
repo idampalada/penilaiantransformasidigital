@@ -38,76 +38,69 @@ document.addEventListener("DOMContentLoaded", function () {
     |--------------------------------------------------------------------------
     */
     window.deleteFile = function (id) {
-        if (confirm("Hapus file ini?")) {
-            let form = document.getElementById("global-delete-form");
-            form.action = "/unor/bukti/" + id; // ✅ sudah benar
-            form.submit();
+        if (!confirm("Hapus file ini?")) return;
+
+        let form = document.getElementById("global-delete-form");
+
+        // 🔥 pastikan _method DELETE ada
+        let methodInput = form.querySelector('input[name="_method"]');
+
+        if (!methodInput) {
+            methodInput = document.createElement("input");
+            methodInput.type = "hidden";
+            methodInput.name = "_method";
+            form.appendChild(methodInput);
         }
+
+        methodInput.value = "DELETE";
+
+        form.action = "/unor/bukti/" + id;
+        form.submit();
     };
 
     /*
     |--------------------------------------------------------------------------
-    | AUTOSAVE NILAI (60 DETIK)
+    | AUTOSAVE CLICK PENILAIAN 
     |--------------------------------------------------------------------------
     */
-
     let formChanged = false;
-    let autosaveInterval = 60000; // 60 detik
 
     const form = document.getElementById("unor-form");
-
     if (!form) return;
 
-    // Tandai jika ada perubahan nilai
     form.querySelectorAll("input[type='number'], select, textarea").forEach(
         function (el) {
             el.addEventListener("input", function () {
                 formChanged = true;
             });
+
+            el.addEventListener("blur", function () {
+                if (!formChanged) return;
+
+                let formData = new FormData(form); // 🔥 penting
+
+                fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: formData,
+                })
+                    .then((response) => {
+                        if (!response.ok) throw new Error("Gagal autosave");
+
+                        formChanged = false;
+                        showIndicator("✔ Autosave tersimpan");
+                    })
+                    .catch((error) => {
+                        console.error("Autosave error:", error);
+                    });
+            });
         },
     );
-
-    // Autosave nilai
-    setInterval(function () {
-        if (!formChanged) return;
-
-        let formData = new FormData();
-
-        // Kirim HANYA field nilai
-        form.querySelectorAll("input[type='number'], select, textarea").forEach(
-            function (el) {
-                if (el.name && !el.disabled) {
-                    formData.append(el.name, el.value);
-                }
-            },
-        );
-
-        fetch(form.action, {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-                "X-Requested-With": "XMLHttpRequest",
-            },
-            body: formData,
-        })
-            .then((response) => {
-                if (!response.ok) throw new Error("Gagal autosave");
-
-                formChanged = false;
-                showIndicator("✔ Autosave berhasil");
-
-                console.log(
-                    "Autosave nilai berhasil:",
-                    new Date().toLocaleTimeString(),
-                );
-            })
-            .catch((error) => {
-                console.error("Autosave error:", error);
-            });
-    }, autosaveInterval);
-
     /*
     |--------------------------------------------------------------------------
     | AUTO UPLOAD FILE (INSTANT)
@@ -182,3 +175,59 @@ function showIndicator(message = "✔ Berhasil") {
         indicator.style.display = "none";
     }, 3000);
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const wrapper = document.querySelector(".table-responsive-unor");
+    if (!wrapper) return;
+
+    // Buat sticky scrollbar fixed di bawah layar
+    const stickyBar = document.createElement("div");
+    stickyBar.className = "sticky-scrollbar";
+
+    const stickyInner = document.createElement("div");
+    stickyInner.className = "sticky-scrollbar-inner";
+    stickyBar.appendChild(stickyInner);
+
+    document.body.appendChild(stickyBar);
+
+    function syncWidth() {
+        // Lebar inner = lebar scroll content tabel
+        stickyInner.style.width = wrapper.scrollWidth + "px";
+
+        // Posisi & lebar sticky bar ikut posisi wrapper di layar
+        const rect = wrapper.getBoundingClientRect();
+        stickyBar.style.left = rect.left + "px";
+        stickyBar.style.width = rect.width + "px";
+    }
+
+    syncWidth();
+    window.addEventListener("resize", syncWidth);
+    window.addEventListener("scroll", syncWidth);
+
+    // Sembunyikan jika tabel tidak visible di viewport
+    function checkVisibility() {
+        const rect = wrapper.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        stickyBar.style.display = inView ? "block" : "none";
+    }
+
+    window.addEventListener("scroll", checkVisibility);
+    checkVisibility();
+
+    // Sync scroll dua arah
+    let syncing = false;
+
+    stickyBar.addEventListener("scroll", function () {
+        if (syncing) return;
+        syncing = true;
+        wrapper.scrollLeft = stickyBar.scrollLeft;
+        syncing = false;
+    });
+
+    wrapper.addEventListener("scroll", function () {
+        if (syncing) return;
+        syncing = true;
+        stickyBar.scrollLeft = wrapper.scrollLeft;
+        syncing = false;
+    });
+});

@@ -14,17 +14,14 @@ class UptBuktiController extends Controller
 {
     $user   = auth()->user();
     $roleId = $user->role_id;
-$unitId = $request->input('unit_id');
+$unitId = $request->input('unit_id') ?? optional($user->unit)->id;
 
 if (!$unitId) {
-    $unitId = optional($user->unit)->id;
+    return response()->json([
+        'success' => false,
+        'message' => 'Unit tidak ditemukan'
+    ], 400);
 }
-
-
-    if (!$unitId) {
-        return back()->withErrors('User belum terhubung dengan unit.');
-    }
-
     /*
     |--------------------------------------------------------------------------
     | VALIDASI FILE
@@ -137,9 +134,10 @@ if (!$unitId) {
         }
     }
 
-return redirect()->route('upt.index', [
-        'unit_id' => $unitId
-    ])->with('success', 'Data berhasil disimpan.');
+return response()->json([
+    'success' => true,
+    'message' => 'Data berhasil disimpan'
+]);
 }
     /*
     |--------------------------------------------------------------------------
@@ -156,9 +154,14 @@ return redirect()->route('upt.index', [
             abort(403, 'Tidak diizinkan menghapus file.');
         }
 
-        $bukti = UptBukti::where('id', $id)
-            ->where('unit_id', optional($user->unit)->id)
-            ->firstOrFail();
+$query = UptBukti::where('id', $id);
+
+// 🔥 kalau bukan superadmin, baru filter unit
+if ($roleId != 1) {
+    $query->where('unit_id', optional($user->unit)->id);
+}
+
+$bukti = $query->firstOrFail();
 
         if ($bukti->file_path && Storage::disk('public')->exists($bukti->file_path)) {
             Storage::disk('public')->delete($bukti->file_path);

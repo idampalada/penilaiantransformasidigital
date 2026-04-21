@@ -108,9 +108,9 @@ body {
            STICKY TABLE HEADER (FIX)
         ========================== */
 .table-responsive-upt {
-    max-height: 75vh;
-    overflow: auto; /* vertical + horizontal */
-    position: relative;
+    overflow-x: auto; /* hanya horizontal */
+    overflow-y: visible; /* ⛔ hilangkan vertical scroll */
+    max-height: none; /* ⛔ hilangkan batas tinggi */
 }
 
 .upt-table thead th {
@@ -369,4 +369,22 @@ body {
 
 .nav-tabs-custom > li > a:hover {
     background: #f5f5f5;
+}
+
+/* ==========================
+   UNTUK SCROLL HORIZONTAL
+   ========================== */
+.sticky-scrollbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    z-index: 9999;
+    background: #f0f0f0;
+}
+.sticky-scrollbar-inner {
+    height: 1px;
 }
