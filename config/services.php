@@ -14,6 +14,7 @@ return [
     |
     */
 'turnstile' => [
+    'enabled' => env('TURNSTILE_ENABLED', true),
     'site' => env('TURNSTILE_SITE_KEY'),
     'secret' => env('TURNSTILE_SECRET_KEY'),
 ],

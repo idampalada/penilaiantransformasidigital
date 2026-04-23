@@ -31,7 +31,9 @@ class LoginRequest extends FormRequest
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
              //  TURNSTILE
-        'cf-turnstile-response' => ['required'],
+'cf-turnstile-response' => [
+    config('services.turnstile.enabled') ? 'required' : 'nullable'
+],
         ];
     }
 
@@ -44,7 +46,9 @@ class LoginRequest extends FormRequest
 {
     $this->ensureIsNotRateLimited();
 
-    //  VERIFY TURNSTILE DI SINI
+// 🔐 VERIFY TURNSTILE (HANYA JIKA ENABLED)
+if (config('services.turnstile.enabled')) {
+
     $response = \Illuminate\Support\Facades\Http::asForm()->post(
         'https://challenges.cloudflare.com/turnstile/v0/siteverify',
         [
@@ -59,7 +63,7 @@ class LoginRequest extends FormRequest
             'email' => 'Verifikasi keamanan gagal. Silakan coba lagi.',
         ]);
     }
-
+}
     //  BARU AUTH
     if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
 

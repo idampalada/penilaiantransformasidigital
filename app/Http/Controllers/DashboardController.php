@@ -10,32 +10,31 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // ✅ Validasi & whitelist parameter
         $jenis = strtoupper($request->get('jenis'));
 
         if (!in_array($jenis, ['UNOR', 'UNKER', 'UPT'])) {
             $jenis = null;
         }
 
-        // ✅ Cache key dinamis berdasarkan filter
         $cacheKey = 'dashboard_' . ($jenis ?? 'all');
 
-        $data = Cache::remember($cacheKey, 60, function () use ($jenis) {
+        $data = Cache::remember($cacheKey, 5, function () use ($jenis) {
 
             $query = DB::table('units')
 
+                // PENILAIAN (tetap)
                 ->leftJoin('unor_penilaians', 'units.id', '=', 'unor_penilaians.unit_id')
                 ->leftJoin('unker_penilaians', 'units.id', '=', 'unker_penilaians.unit_id')
                 ->leftJoin('upt_penilaians', 'units.id', '=', 'upt_penilaians.unit_id')
 
-                ->leftJoin('unor_buktis', 'units.id', '=', 'unor_buktis.unit_id')
-                ->leftJoin('unker_buktis', 'units.id', '=', 'unker_buktis.unit_id')
-                ->leftJoin('upt_buktis', 'units.id', '=', 'upt_buktis.unit_id')
-
                 ->select(
+                    'units.id',
                     'units.jenis',
                     'units.nama',
 
+                    // =========================
+                    // TOTAL PENILAIAN
+                    // =========================
                     DB::raw("
                         CASE 
                             WHEN units.jenis = 'UNOR' THEN COUNT(DISTINCT unor_penilaians.id)
@@ -45,21 +44,38 @@ class DashboardController extends Controller
                         END as total_penilaian
                     "),
 
-                    DB::raw("
-                        CASE 
-                            WHEN units.jenis = 'UNOR' THEN COUNT(DISTINCT unor_buktis.id)
-                            WHEN units.jenis = 'UNKER' THEN COUNT(DISTINCT unker_buktis.id)
-                            WHEN units.jenis = 'UPT' THEN COUNT(DISTINCT upt_buktis.id)
-                            ELSE 0
-                        END as total_bukti
-                    ")
+                    // =========================
+                    // TOTAL BUKTI (LOGIKA BARU)
+                    // =========================
+DB::raw("
+    CASE 
+        WHEN units.jenis = 'UNOR' THEN (
+            SELECT COUNT(DISTINCT (b.unor_indikator_id, b.metode_index))
+            FROM unor_buktis b
+            WHERE b.unit_id = units.id
+        )
+        WHEN units.jenis = 'UNKER' THEN (
+            SELECT COUNT(DISTINCT (b.unker_indikator_id, b.metode_index))
+            FROM unker_buktis b
+            WHERE b.unit_id = units.id
+        )
+        WHEN units.jenis = 'UPT' THEN (
+            SELECT COUNT(DISTINCT (b.upt_indikator_id, b.metode_index))
+            FROM upt_buktis b
+            WHERE b.unit_id = units.id
+        )
+        ELSE 0
+    END as total_bukti
+")
                 )
 
                 ->when($jenis, function ($q) use ($jenis) {
                     return $q->where('units.jenis', $jenis);
                 })
 
-                ->groupBy('units.jenis', 'units.nama')
+                // 🔥 WAJIB (fix error grouping PostgreSQL)
+                ->groupBy('units.id', 'units.jenis', 'units.nama')
+
                 ->orderBy('units.jenis')
                 ->orderBy('units.nama');
 
