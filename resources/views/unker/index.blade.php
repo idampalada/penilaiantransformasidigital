@@ -380,6 +380,21 @@ foreach ($indikators as $it) {
                                         @endif
                                     </div>
                                 @endforeach
+                                   {{-- OPSIONAL LAST MODIFIED JIKA DIBUTUHKAN --}}
+@php
+    $latestFile = $item->bukti
+        ->where('metode_index', $currentIndex)
+        ->where('metode_type', 1)
+        ->sortByDesc('created_at')
+        ->first();
+@endphp
+
+@if($latestFile)
+    <div style="margin-top:5px; font-size:11px; color:#666;">
+         Upload terakhir:
+        {{ $latestFile->created_at->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+    </div>
+@endif
                             </td>
 
                             {{-- PENILAIAN MANDIRI — role 2 boleh isi, role 3 disabled --}}

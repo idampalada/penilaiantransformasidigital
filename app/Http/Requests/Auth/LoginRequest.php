@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class LoginRequest extends FormRequest
 {
@@ -29,6 +30,8 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+             //  TURNSTILE
+        'cf-turnstile-response' => ['required'],
         ];
     }
 
@@ -38,19 +41,45 @@ class LoginRequest extends FormRequest
      * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+{
+    $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+    //  VERIFY TURNSTILE DI SINI
+    $response = \Illuminate\Support\Facades\Http::asForm()->post(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        [
+            'secret' => config('services.turnstile.secret'),
+            'response' => $this->input('cf-turnstile-response'),
+            'remoteip' => $this->ip(),
+        ]
+    );
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+    if (! $response->json('success')) {
+        throw ValidationException::withMessages([
+            'email' => 'Verifikasi keamanan gagal. Silakan coba lagi.',
+        ]);
     }
+
+    //  BARU AUTH
+    if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+
+        sleep(1);
+
+        \Log::warning('Login failed', [
+            'email' => $this->input('email'),
+            'ip' => $this->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
+        RateLimiter::hit($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => trans('auth.failed'),
+        ]);
+    }
+
+    RateLimiter::clear($this->throttleKey());
+}
 
     /**
      * Ensure the login request is not rate limited.
@@ -82,4 +111,10 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
+    public function messages(): array
+{
+    return [
+        'cf-turnstile-response.required' => 'Silakan verifikasi bahwa Anda bukan robot.',
+    ];
+}
 }

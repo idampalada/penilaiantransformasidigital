@@ -190,12 +190,12 @@
 
                     /*
             |--------------------------------------------------------------------------
-            | DASHBOARD PENILAIAN
+            | DASHBOARD PENILAIAN WAJIB PAKE THROTTLE KARENA UNTUK PUBLIK
             |--------------------------------------------------------------------------
             */
 
-            Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('throttle:60,1');
 
 
         

@@ -23,37 +23,43 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
-        $request->session()->regenerate();
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $user = Auth::user();
-        $role = $user->role->name;
+    $user = Auth::user();
 
-        // 🔥 1. Kalau tim penilai → ke halaman pilih unit
-        if (str_contains($role, 'timpenilai')) {
-            return redirect('/unit');
-        }
+    // ✅ Ambil role dengan aman
+    $role = $user->role->name ?? '';
 
-        // 🔥 2. Kalau user biasa → pakai unit dari DB
-        $jenis = strtoupper($user->unit?->jenis ?? '');
+    // 📝 Logging login sukses
+    \Log::info('Login success', [
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'ip' => $request->ip(),
+        'user_agent' => $request->userAgent(),
+    ]);
 
-        if ($jenis === 'UNOR') {
-            return redirect('/unor');
-        }
+    // 🔥 NORMALISASI ROLE (hapus spasi & lowercase)
+    $normalizedRole = strtolower(str_replace(' ', '', $role));
 
-        if ($jenis === 'UNKER') {
-            return redirect('/unker');
-        }
-
-        if ($jenis === 'UPT') {
-            return redirect('/upt');
-        }
-
-        // 🔥 3. Default fallback
-        return redirect('/dashboard');
+    // 🔥 1. Tim penilai → ke halaman pilih unit
+    if (str_starts_with($normalizedRole, 'timpenilai')) {
+        return redirect('/unit');
     }
 
+    // 🔥 2. Redirect berdasarkan unit (untuk user biasa)
+    $jenis = strtoupper($user->unit?->jenis ?? '');
+
+    $allowed = ['UNOR', 'UNKER', 'UPT'];
+
+    if (in_array($jenis, $allowed)) {
+        return redirect('/' . strtolower($jenis));
+    }
+
+    // 🔥 3. Default fallback
+    return redirect('/dashboard');
+}
     /**
      * Destroy an authenticated session.
      */

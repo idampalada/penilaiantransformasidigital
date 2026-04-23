@@ -71,10 +71,16 @@
             @enderror
         </div>
 
+        
+
         <!-- BUTTON -->
         <button type="submit" class="masuk-btn w-full text-white font-semibold py-4 rounded-xl tracking-widest text-base transition-all duration-300 mt-2">
             MASUK
         </button>
+                <!--  TURNSTILE DI SINI -->
+        <div class="mt-4">
+            <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site') }}"></div>
+        </div>
 
         <!-- LINK DASHBOARD -->
 <div class="text-center mt-4">
@@ -128,5 +134,5 @@
         // Highlight gold-line pseudo element for the right panel label
         // (uses same CSS class defined in layout)
     </script>
-
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </x-guest-layout>
