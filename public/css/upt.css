@@ -108,9 +108,9 @@ body {
            STICKY TABLE HEADER (FIX)
         ========================== */
 .table-responsive-upt {
-    overflow-x: auto; /* hanya horizontal */
-    overflow-y: visible; /* ⛔ hilangkan vertical scroll */
-    max-height: none; /* ⛔ hilangkan batas tinggi */
+    overflow-x: auto;
+    overflow-y: auto; /* ✅ WAJIB */
+    max-height: 80vh; /* atau sesuai kebutuhan */
 }
 
 .upt-table thead th {
