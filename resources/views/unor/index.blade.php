@@ -212,9 +212,9 @@ foreach ($indikators as $it) {
         <input type="hidden" name="unit_id" value="{{ request('unit_id') }}">
     @endif
 
-    <div class="text-right" style="margin-bottom:15px;">
+    <!-- <div class="text-right" style="margin-bottom:15px;">
         <button type="submit" class="btn btn-primary">Simpan</button>
-    </div>
+    </div> -->
 
     {{-- FILTER KATEGORI --}}
 
@@ -365,7 +365,7 @@ foreach ($indikators as $it) {
 )
                                     <div style="margin-top:4px; font-size:11px;">
                                         📄
-                                        <a href="{{ asset('storage/' . $file->file_path) }}"
+                                        <a href="{{ url('/bukti/'.$file->file_name) }}"
                                            target="_blank"
                                            title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
                                             {{ $file->file_name }}
@@ -489,7 +489,7 @@ foreach ($indikators as $it) {
 )
                                         <div style="margin-top:4px; font-size:11px;">
                                             📄
-                                            <a href="{{ asset('storage/' . $file->file_path) }}"
+                                            <a href="{{ url('/bukti/'.$file->file_name) }}"
                                                target="_blank"
                                                title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
                                                 {{ $file->file_name }}

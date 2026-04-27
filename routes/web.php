@@ -231,3 +231,26 @@ Route::get('/set-unit/{jenis}', function ($jenis) {
 
     return redirect('/' . $jenis);
 })->middleware('auth');
+
+                    /*
+            |--------------------------------------------------------------------------
+            | PRIVATE FILE UPLOAD
+            |--------------------------------------------------------------------------
+            */
+
+Route::get('/bukti/{filename}', function ($filename) {
+
+    if (!auth()->check()) {
+        abort(403);
+    }
+
+    $bukti = \App\Models\UnorBukti::where('file_name', $filename)->firstOrFail();
+
+    $path = storage_path('app/' . $bukti->file_path);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+});
