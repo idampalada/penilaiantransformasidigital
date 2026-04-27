@@ -234,7 +234,7 @@ Route::get('/set-unit/{jenis}', function ($jenis) {
 
                     /*
             |--------------------------------------------------------------------------
-            | PRIVATE FILE UPLOAD
+            | PRIVATE FILE UPLOAD 
             |--------------------------------------------------------------------------
             */
 
@@ -244,7 +244,15 @@ Route::get('/bukti/{filename}', function ($filename) {
         abort(403);
     }
 
-    $bukti = \App\Models\UnorBukti::where('file_name', $filename)->firstOrFail();
+    // 🔥 cari di semua tabel
+    $bukti =
+        \App\Models\UnorBukti::where('file_name', $filename)->first()
+        ?? \App\Models\UnkerBukti::where('file_name', $filename)->first()
+        ?? \App\Models\UptBukti::where('file_name', $filename)->first();
+
+    if (!$bukti) {
+        abort(404);
+    }
 
     $path = storage_path('app/' . $bukti->file_path);
 
