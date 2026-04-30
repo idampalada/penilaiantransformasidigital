@@ -238,20 +238,33 @@ Route::get('/set-unit/{jenis}', function ($jenis) {
             |--------------------------------------------------------------------------
             */
 
-Route::get('/bukti/{filename}', function ($filename) {
+Route::get('/bukti/{id}/{filename}', function ($id, $filename) {
 
     if (!auth()->check()) {
         abort(403);
     }
 
-    // 🔥 cari di semua tabel
+    $user = auth()->user();
+
     $bukti =
-        \App\Models\UnorBukti::where('file_name', $filename)->first()
-        ?? \App\Models\UnkerBukti::where('file_name', $filename)->first()
-        ?? \App\Models\UptBukti::where('file_name', $filename)->first();
+        \App\Models\UnorBukti::find($id)
+        ?? \App\Models\UnkerBukti::find($id)
+        ?? \App\Models\UptBukti::find($id);
 
     if (!$bukti) {
         abort(404);
+    }
+
+    // 🔒 filename harus cocok
+    if ($bukti->file_name !== $filename) {
+        abort(404);
+    }
+
+    // 🔒 AUTH (ikut logika kamu)
+    if ($user->role_id != 1 && !str_contains($user->role->name, 'timpenilai')) {
+        if ($bukti->unit_id != $user->unit_id) {
+            abort(403);
+        }
     }
 
     $path = storage_path('app/' . $bukti->file_path);

@@ -367,7 +367,7 @@ foreach ($indikators as $it) {
 )
                                     <div style="margin-top:4px; font-size:11px;">
                                         📄
-                                        <a href="{{ url('/bukti/'.$file->file_name) }}"
+                                        <a href="{{ url('/bukti/'.$file->id.'/'.$file->file_name) }}"
                                            target="_blank"
                                            title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
                                             {{ $file->file_name }}
@@ -491,7 +491,7 @@ foreach ($indikators as $it) {
 )
                                         <div style="margin-top:4px; font-size:11px;">
                                             📄
-                                            <a href="{{ url('/bukti/'.$file->file_name) }}"
+                                            <a href="{{ url('/bukti/'.$file->id.'/'.$file->file_name) }}"
                                                target="_blank"
                                                title="Upload oleh: {{ $file->user->name ?? 'Tidak diketahui' }}">
                                                 {{ $file->file_name }}
